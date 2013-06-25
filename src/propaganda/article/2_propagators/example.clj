@@ -47,7 +47,9 @@
 
 (defn propagator
   "Adds a new propagator (to-do) to the neighbours and guarantees that
-  it is called (although adding it should have that side-effect...)"
+  it is called (although adding it should have that side-effect, but not
+  doing it causes a failure - there is something I haven't thought
+  through)"
   [neighbours to-do]
   (doseq [cell neighbours]
     (new-neighbour! cell to-do))
@@ -63,7 +65,7 @@
       (apply f args))))
 
 (defn function->propagator-constructor
-  "Returns a propagtor constructor which will life the content of f
+  "Returns a propagtor constructor which will lift the content of f
   applied to the first cells to the last cell."
   [f]
   (fn [& cells]
