@@ -1,4 +1,4 @@
-(ns propaganda.article.2-propagators.example)
+(ns propaganda.article.3-partial-information.example)
 
 ;; Interval arithmetic
 
