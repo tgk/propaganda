@@ -311,7 +311,7 @@
            t-squared  (make-cell)
            gt-squared (make-cell)]
        ((constant (make-interval 9.789 9.832)) g)
-       ((constant (make-interval 0.5 0.5)) one-half)
+       ((constant 0.5) one-half)
        (quadratic t t-squared)
        (product g t-squared gt-squared)
        (product one-half gt-squared h)))))
@@ -346,7 +346,7 @@
      (add-content barometer-height (make-interval 0.3 0.32))
      (add-content barometer-shadow (make-interval 0.36 0.37))
 
-     (add-content building-height 45)
+     (add-content building-height 45.0)
 
      [(get-content building-height)
       (get-content building-shadow)
