@@ -82,6 +82,11 @@
   [thing]
   (not= nothing thing))
 
+;; Insigth: This method works, but could potentially blow the stack. An
+;; alternative strategy would be to have two refs: alerting-propagators
+;; and propagator-queue. alert-propagators should add the propagators to
+;; the queue, check to see if af consume loop is running, and if not,
+;; start one
 (defn alert-propagators
   "Simple implementation of alerting propagators. The original article
   seems to indicate that scheduling should be used instead of just
