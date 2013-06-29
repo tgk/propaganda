@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+
+<head>
+<title>propaganda - propagators explained</title>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<style>
+body {
+  font: 14px Helvetica Neue;
+  text-rendering: optimizeLegibility;
+  margin-top: 1em;
+  overflow-y: scroll;
+}
+
+.body {
+  width: 700px;
+  margin: auto;
+}
+</style>
+</head>
+
+<body>
+
+<div class="body">
+
+<h1>Propagators explained</h1>
+
+<p>Propagators represent an interesting computational model in which <em>cells</em> hold on to values. The values are updated by <em>propagators</em>. This brief tutorial explains the basics of the computational model and the possibilities it holds.</p>
+
+<style>
+.figure {
+  background: #fff;
+  border: solid 1px #ddd;
+  box-shadow: 0 0 4px rgba(0,0,0,.2);
+  height: 150px;
+  position: relative;
+  width: 200px;
+}
+
+.figure circle.cell {
+  fill: #aaa;
+  stroke: #666;
+  stroke-width: 1.5px;
+}
+
+.figure rect.propagator {
+  stroke: #666;
+  stroke-width: 1.5px;
+}
+
+.figure button {
+  left: 10px;
+  top: 10px;
+  position: absolute;
+  width: 60px;
+}
+</style>
+
+<script type='text/javascript'>
+
+var w = 200,
+    h = 130,
+    x = function(d) { return d.x; },
+    y = function(d) { return d.y; },
+    color = function(d) { return d3.rgb("hsl(" + d.h + ","
+                                               + d.s + ","
+                                               + d.l + ")"); },
+    delay = function(d) { return d.d; };
+
+</script>
+
+<h2>Cells</h2>
+
+<p>A cell is much like a variable, in that it holds on to a value over time. Initially, all cells have no value, but as the program runs, cells can take on values when instructed to do so, either directly by the programmer or by propagators.</p>
+
+<div class='figure' id='figure-1'>
+<button>Demo</button>
+</div>
+
+<script type='text/javascript'>
+(function() {
+
+var data     = [{x:  50, h: 340, s: 0, l: 80},
+                {x: 150, h: 190, s: 0, l: 80},
+                {x: 100, h:  80, s: 0, l: 80}],
+    new_data = [{x:  50, h: 340, s: 100, l: 80},
+                {x: 150, h: 190, s: 100, l: 80},
+                {x: 100, h:  80, s: 100, l: 80}];
+
+
+  var svg = d3.select("#figure-1").append("svg")
+             .attr("width", w)
+             .attr("height", h);
+
+  var cells = svg.selectAll(".cell")
+                   .data(data)
+                 .enter().append("circle")
+                    .attr("class", "cell")
+                    .attr("cx", x)
+                    .attr("cy", 100)
+                    .attr("r", 18)
+                    .style("fill", color);
+
+  d3.select("#figure-1 button").on("click", function() {
+    cells.data(data)
+       .style("fill", color);
+    cells.data(new_data)
+       .transition()
+       .delay(function(d, i) { return i * 500; })
+       .duration(300)
+       .style("fill", color);
+  });
+})();
+</script>
+
+
+<h2>Propagators</h2>
+
+<p>Propagators attach themselves to one or more cells. Whenever the value of a cell is changed, the propagator is informed, and it can then choose to take some form of action, typically updating other cells.</p>
+
+<div class='figure' id='figure-2'>
+<button>Demo</button>
+</div>
+
+<script type='text/javascript'>
+(function() {
+
+  var data     = [{x:  55, h:  80, s: 0, l: 80},
+                  {x: 145, h: 340, s: 0, l: 80}],
+      new_data = [{x:  55, h:  80, s: 100, l: 80, d: 100},
+                  {x: 145, h: 340, s: 100, l: 80, d: 1500}],
+      signals   = [{x:  70, y: 72.5, h:  80, s: 50, l: 80},
+                   {x:  80, y: 65.0, h:  80, s: 50, l: 80},
+                   {x:  90, y: 57.5, h:  80, s: 50, l: 80},
+                   {x: 110, y: 57.5, h: 340, s: 50, l: 80},
+                   {x: 120, y: 65.0, h: 340, s: 50, l: 80},
+                   {x: 130, y: 72.5, h: 340, s: 50, l: 80}];
+
+  var svg = d3.select("#figure-2").append("svg")
+             .attr("width", w)
+             .attr("height", h);
+
+  var signal = svg.selectAll(".signal")
+                     .data(signals)
+                   .enter().append("circle")
+                     .attr("class", "signal")
+                     .attr("cx", x)
+                     .attr("cy", y)
+                     .attr("r", 5)
+                     .style("fill", "white");
+
+  var cells = svg.selectAll(".cell")
+                   .data(data)
+                 .enter().append("circle")
+                    .attr("class", "cell")
+                    .attr("cx", x)
+                    .attr("cy", 100)
+                    .attr("r", 18)
+                    .style("fill", color);
+
+  var propagator = svg.append("rect")
+                         .attr("class", "propagator")
+                         .attr("x", 85)
+                         .attr("y", 20)
+                         .attr("width", 30)
+                         .attr("height", 30)
+                         .style("fill", "white")
+
+  d3.select("#figure-2 button").on("click", function() {
+
+    // Set the stage
+    signal
+       .style("fill", "white");
+    cells.data(data)
+       .style("fill", color);
+    propagator
+       .style("fill", "white");
+
+    // Animate
+    cells.data(new_data)
+       .transition()
+       .delay(delay)
+       .duration(300)
+       .style("fill", color);
+    propagator
+       .transition()
+       .delay(1000)
+       .duration(200)
+       .style("fill", "black")
+       .each("end", function() {
+           propagator
+             .transition()
+             .duration(100)
+             .style("fill", "white");
+         });
+    signal.data(signals)
+      .transition()
+      .delay(function(d, i) {return i * 150 + 500; })
+      .duration(400)
+      .style("fill", color)
+      .each("end", function() {
+        d3.select(this)
+          .transition()
+          .delay(200)
+          .duration(400)
+          .style("fill", "white");
+        });
+  });
+})();
+</script>
+
+</div>
+
+</body>
+</html>
