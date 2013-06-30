@@ -50,11 +50,12 @@ body {
 }
 
 .figure button {
-  left: 10px;
-  top: 10px;
+  left: 70px;
+  top: 125px;
   position: absolute;
   width: 60px;
 }
+
 </style>
 
 <script type='text/javascript'>
@@ -209,6 +210,120 @@ var data     = [{x:  50, h: 340, s: 0, l: 80},
   });
 })();
 </script>
+
+<p>Propagation can happen in both directions: if we specify a propagator ensuring cell B is the square of cell A, and a propagator ensuring cell A is the square-root of cell B,  we can derive cell B from cell A <em>or</em> cell A from B, depending on what information is available.</p>
+
+<div class='figure' id='figure-3'>
+<button>Demo</button>
+</div>
+
+<script type='text/javascript'>
+(function() {
+
+  var cell_data = [{x:  55, h:  80, s: 0, l: 80},
+                   {x: 145, h: 340, s: 0, l: 80}],
+      new_data  = [{x:  55, h:  80, s: 100, l: 80, d: 100},
+                   {x: 145, h: 340, s: 100, l: 80, d: 1500}],
+      signals   = [{x:  55, y: 70, h:  80, s: 50, l: 80},
+                   {x:  55, y: 60, h:  80, s: 50, l: 80},
+
+                   {x:  85, y: 45, h: 340, s: 50, l: 80},
+                   {x:  95, y: 55, h: 340, s: 50, l: 80},
+                   {x: 105, y: 65, h: 340, s: 50, l: 80},
+                   {x: 115, y: 75, h: 340, s: 50, l: 80},
+
+                   {x:  145, y: 70, h: 340, s: 50, l: 80},
+                   {x:  145, y: 60, h: 340, s: 50, l: 80},
+
+                   {x: 115, y: 45, h:  80, s: 50, l: 80},
+                   {x: 105, y: 55, h:  80, s: 50, l: 80},
+                   {x:  95, y: 65, h:  80, s: 50, l: 80},
+                   {x:  85, y: 75, h:  80, s: 50, l: 80},
+
+]
+      propagator_data = [{x:  40, d: 1000},
+                         {x: 130, d: 1800}];
+
+  var svg = d3.select("#figure-3").append("svg")
+             .attr("width", w)
+             .attr("height", h);
+
+  var signal = svg.selectAll(".signal")
+                     .data(signals)
+                   .enter().append("circle")
+                     .attr("class", "signal")
+                     .attr("cx", x)
+                     .attr("cy", y)
+                     .attr("r", 5)
+                     .style("fill", "white");
+
+  var cells = svg.selectAll(".cell")
+                   .data(cell_data)
+                 .enter().append("circle")
+                    .attr("class", "cell")
+                    .attr("cx", x)
+                    .attr("cy", 100)
+                    .attr("r", 18)
+                    .style("fill", color);
+
+  var propagators = svg.selectAll(".propagator")
+                         .data(propagator_data)
+                       .enter().append("rect")
+                         .attr("class", "propagator")
+                         .attr("x", x)
+                         .attr("y", 20)
+                         .attr("width", 30)
+                         .attr("height", 30)
+                         .style("fill", "white")
+
+  d3.select("#figure-3 button").on("click", function() {
+
+    // Set the stage
+    signal
+       .style("fill", "white");
+    cells.data(cell_data)
+       .style("fill", color);
+    propagators.data(propagator_data)
+       .style("fill", "white");
+
+    // Animate
+    cells.data(new_data)
+       .transition()
+       .delay(delay)
+       .duration(300)
+       .style("fill", color);
+    propagators.data(propagator_data)
+       .transition()
+       .delay(delay)
+       .duration(200)
+       .style("fill", "black")
+       .each("end", function() {
+           d3.select(this)
+             .transition()
+             .duration(100)
+             .style("fill", "white");
+         });
+    signal.data(signals)
+      .transition()
+      .delay(function(d, i) {return i * 150 + 500; })
+      .duration(400)
+      .style("fill", color)
+      .each("end", function() {
+        d3.select(this)
+          .transition()
+          .delay(200)
+          .duration(400)
+          .style("fill", "white");
+        });
+  });
+})();
+</script>
+
+<p>As illustrated above, the rightmost propagator will inform the green cell of its new content, but as the green cell already has the correct value, propagation stops.</p>
+
+<!-- Resolving conflicts -->
+
+
 
 </div>
 
