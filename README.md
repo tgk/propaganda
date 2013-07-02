@@ -2,6 +2,12 @@
 
 The propaganda library is a Clojure implementation of the propagator computational model described in [The Art of the Propagator](http://dspace.mit.edu/handle/1721.1/44215). The aim of the library is to be easy to use and reason about, yet extensible.
 
+## Artifact
+
+Leiningen dependency:
+
+    [propaganda "0.0.1"]
+
 ## Tutorial
 
 The `gh-pages` branch of this project contains a brief explanation of the basics of the propagator computational model. The page can be visited [here](http://tgk.github.io/propaganda/). The [The Art of the Propagator](http://dspace.mit.edu/handle/1721.1/44215) contains a more in-depth explanation of how propagation can be implemented.
