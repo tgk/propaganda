@@ -1,14 +1,3 @@
-# propaganda
-
-The propaganda library is a Clojure implementation of the propagator computational model described in [The Art of the Propagator](http://dspace.mit.edu/handle/1721.1/44215). The aim of the library is to be easy to use and reason about, yet extensible.
-
-## Tutorial
-
-The `gh-pages` branch of this project contains a brief explanation of the basics of the propagator computational model. The page can be visited [here](http://tgk.github.io/propaganda/). The [The Art of the Propagator](http://dspace.mit.edu/handle/1721.1/44215) contains a more in-depth explanation of how propagation can be implemented.
-
-To use the propaganda library, you need to define a merge, function, create cells and set up propagators. In this short example we just use the default merger function, we define the square and square-root propagator and set up relations beween simple cells. An example where values are intervals and merging is performed by taking the intersection of intervals can be found in `examples/building_height.clj`
-
-{% highlight clj %}
 (require '(propaganda [core :as propaganda]))
 
 ;; default-merge will give us a merger that will merge
@@ -79,19 +68,3 @@ To use the propaganda library, you need to define a merge, function, create cell
     (propaganda/add-content z 10.0)
     (propaganda/add-content z-squared 123.0)))
 ;; Exception: Inconsistency: 100.0 != 123.0
-{% endhighlight %}
-
-
-## Motivation
-
-The objective of this project is to create an extinsible propagator library for Clojure. Propagators define a computational model not completely unlike that found in FRP, but with some differences. They are described in the article "The Art of the Propagator".
-
-Along with the library itself, the project should supply documentation of the API, good examples and tutorials.
-
-I have not previously worked with propagtors, so this will also be an exploration for me.
-
-## Backlog
-
-- Add value provence datatype and merge function
-- More examples on tgk.github.io/propaganda
-- Add TMS datatype and merge function

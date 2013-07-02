@@ -1,6 +1,5 @@
-(ns propaganda.examples.building-height
-  (:use propaganda.core
-        propaganda.intervals))
+(use 'propaganda.core)
+(use 'propaganda.intervals)
 
 (defn fall-duration
   "Creates propagator from fall duration t to building height h with
