@@ -13,18 +13,21 @@
   [thing]
   (not= nothing thing))
 
-;; Insigth: This method works, but could potentially blow the stack. An
-;; alternative strategy would be to have two refs: alerting-propagators
-;; and propagator-queue. alert-propagators should add the propagators to
-;; the queue, check to see if af consume loop is running, and if not,
-;; start one
+(def alerting? (ref false))
+(def alert-queue (ref clojure.lang.PersistentQueue/EMPTY))
+
 (defn alert-propagators
-  "Simple implementation of alerting propagators. The original article
-  seems to indicate that scheduling should be used instead of just
-  aggressively executing the propagators."
+  "Simple implementation of alerting propagators."
   [propagators]
-  (doseq [propagator propagators]
-    (propagator)))
+  (dosync
+   (alter alert-queue into propagators)
+   (when (not @alerting?)
+     (ref-set alerting? true)
+     (while (peek @alert-queue)
+       (let [propagator (peek @alert-queue)]
+         (alter alert-queue pop)
+         (propagator)))
+     (ref-set alerting? false))))
 
 (defprotocol Cell
   (new-neighbour! [this new-neighbour])
