@@ -48,7 +48,7 @@
     (quadratic x x-squared)
     (propaganda/add-content x 10.0)
     (propaganda/get-content x-squared)))
-;; => 100
+;; => 100.0
 
 ;; or the square-root, depending on the input from the user
 (let [y (propaganda/make-cell)
