@@ -89,7 +89,7 @@ To use the propaganda library, you need to define a merge, function, create cell
 
 ## Motivation
 
-The objective of this project is to create an extinsible propagator library for Clojure. Propagators define a computational model not completely unlike that found in FRP, but with some differences. They are described in the article "The Art of the Propagator".
+The objective of this project is to create an extinsible propagator library for Clojure. Propagators define a computational model not completely unlike that found in FRP, but with some differences. They are described in the article [The Art of the Propagator](http://dspace.mit.edu/handle/1721.1/44215).
 
 Along with the library itself, the project should supply documentation of the API, good examples and tutorials.
 
@@ -101,4 +101,4 @@ I have not previously worked with propagtors, so this will also be an exploratio
 - More examples on tgk.github.io/propaganda
 - Add TMS datatype and merge function
 - Add interesting datatypes, such as Joda time
-- Make available form ClojureScript
+- Make available from ClojureScript
