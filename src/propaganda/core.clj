@@ -42,9 +42,15 @@
   [reason]
   (Contradiction. reason))
 
-(defn contradictory?
+(defn- base-contradictory?
   [x]
   (isa? (class x) Contradiction))
+
+(def ^:dynamic *contradictory?* base-contradictory?)
+
+(defn generic-contradictory?
+  []
+  (generic-operators/generic-operator base-contradictory?))
 
 (defn- merge-base-case
   [content increment]
@@ -87,13 +93,13 @@
         (dosync
          (let [answer (*merge* @content increment)]
            (cond
-            (= answer @content)     :ok
-            (contradictory? answer) (throw (Exception.
-                                            (str "Inconsistency: "
-                                                 (:reason answer))))
-            :else                   (do
-                                      (ref-set content answer)
-                                      (alert-propagators @neighbours))))))
+            (= answer @content)       :ok
+            (*contradictory?* answer) (throw (Exception.
+                                              (str "Inconsistency: "
+                                                   (:reason answer))))
+            :else                     (do
+                                        (ref-set content answer)
+                                        (alert-propagators @neighbours))))))
       (get-content
         [this]
         @content))))
