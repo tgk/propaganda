@@ -16,18 +16,18 @@
   [x]
   (isa? (class x) Supported))
 
-(defn more-informative-support?
-  "Returns true if the support-set for support-2 contains strictly more
-  information than the support-set in support-1."
+(defn- more-informative-support?
+  "Returns true if the support-set for support-1 contains strictly more
+  information than the support-set in support-2."
   [support-1 support-2]
   (and (not= (:support-set support-1) (:support-set support-2))
-       (clojure.set/subset? (:support-set support-1) (:support-set support-2))))
+       (clojure.set/subset? (:support-set support-2) (:support-set support-1))))
 
-(defn merge-supports
+(defn- merge-supports
   [& supports]
   (apply clojure.set/union (map :support-set supports)))
 
-(defn implies?
+(defn- implies?
   [merge-operator val-1 val-2]
   (= val-1 (merge-operator val-1 val-2)))
 
