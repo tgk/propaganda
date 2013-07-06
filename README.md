@@ -6,7 +6,7 @@ The propaganda library is a Clojure implementation of the propagator computation
 
 Leiningen dependency:
 
-    [propaganda "0.0.1"]
+    [propaganda "0.0.2"]
 
 ## Tutorial
 
