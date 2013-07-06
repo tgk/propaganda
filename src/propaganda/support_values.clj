@@ -8,9 +8,15 @@
 (defrecord Supported
     [value support-set])
 
+(defn setify
+  [v]
+  (if (set? v)
+    v
+    #{v}))
+
 (defn supported
   [value support]
-  (Supported. value (set [support])))
+  (Supported. value (setify support)))
 
 (defn supported?
   [x]
@@ -24,6 +30,7 @@
        (clojure.set/subset? (:support-set support-2) (:support-set support-1))))
 
 (defn- merge-supports
+  "Returns the merge of the supporting sets for supports."
   [& supports]
   (apply clojure.set/union (map :support-set supports)))
 
@@ -58,6 +65,8 @@
    supported? supported?))
 
 (defn extend-contradictory?
+  "Extends the generic contradictory? operator with support for
+  supported values."
   [generic-contradictory?-operator]
   (go/assign-operation
    generic-contradictory?-operator
@@ -65,8 +74,25 @@
      (generic-contradictory?-operator (:value support)))
    supported?))
 
+(defn supported-unpacking
+  "Returns a function that will take supported arguments, apply f to
+  them and return a supported value with their merged supporting sets."
+  [f]
+  (fn [& args]
+    (supported
+     (apply f (map :value args))
+     (apply merge-supports args))))
+
+(defn ->supported
+  "Returns thing if it is already a supported value. Creates new
+  supported value with an empty support set otherwise."
+  [thing]
+  (if (supported? thing)
+    thing
+    (supported thing #{})))
+
 #_(let [my-merge (p/default-merge)
-      my-contradictory? (p/generic-contradictory?)]
+      my-contradictory? (p/default-contradictory?)]
   (extend-merge my-merge)
   (extend-contradictory? my-contradictory?)
   (binding [p/*merge* my-merge

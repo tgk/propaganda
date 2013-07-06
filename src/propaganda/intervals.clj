@@ -1,6 +1,7 @@
 (ns propaganda.intervals
   (:require [propaganda.core :as propaganda]
-            [propaganda.generic-operators :as go]))
+            [propaganda.generic-operators :as go]
+            [propaganda.support-values :as support-values]))
 
 ;; Interval arithmetics
 
@@ -52,27 +53,6 @@
     (propaganda/contradiction
      (str number " not in interval [" (:lo interval?) ", " (:hi interval) "]"))))
 
-;; Extend supplied merge
-
-(defn extend-merge
-  "Extends the supplied generic operator with interval mergings. These
-  also include merging numbers with intervals."
-  [generic-merge-operator]
-  (doto generic-merge-operator
-    (go/assign-operation (fn [content increment]
-                           (let [new-range (intersect-intervals content increment)]
-                             (if (empty-interval? new-range)
-                               (propaganda/contradiction
-                                (str "Non-overlapping intervals: " content " and " increment))
-                               new-range)))
-                         interval? interval?)
-    (go/assign-operation (fn [content increment]
-                           (ensure-inside increment content))
-                         number? interval?)
-    (go/assign-operation (fn [content increment]
-                           (ensure-inside content increment))
-                         interval? number?)))
-
 ;; Generic standard arithmetic operations
 
 (defn ->interval
@@ -82,6 +62,8 @@
     (make-interval x x)))
 
 (defn coercing
+  "Returns a version of f that will coerce arguments using coercer
+  before applying them."
   [coercer f]
   (fn [& args]
     (apply f (map coercer args))))
@@ -130,3 +112,63 @@
   [x x-squared]
   (squarer x x-squared)
   (sqrter x-squared x))
+
+;; Supported values
+
+(defn boolean?
+  [thing]
+  (or (= thing false) (= thing true)))
+
+(defn flat?
+  "Determines if thing is flat, i.e. an interval, a number or a
+  boolean."
+  [thing]
+  (or (interval? thing)
+      (number? thing)
+      ;; TODO: We don't support booleans in the interval namespace yet
+      #_(boolean? thing)))
+
+;; TODO: Remember to extend this list when more operations are
+;; implemented
+(doseq [generic-op [generic-mul generic-div]]
+  (go/assign-operation generic-op
+                       (support-values/supported-unpacking generic-op)
+                       support-values/supported? support-values/supported?)
+  (go/assign-operation generic-op
+                       (coercing support-values/->supported generic-op)
+                       support-values/supported? flat?)
+  (go/assign-operation generic-op
+                       (coercing support-values/->supported generic-op)
+                       flat? support-values/supported?))
+
+(doseq [generic-op [generic-square generic-sqrt]]
+  (go/assign-operation generic-op
+                       (support-values/supported-unpacking generic-op)
+                       support-values/supported?))
+
+;; Extend supplied merge
+
+(defn extend-merge
+  "Extends the supplied generic operator with interval mergings. These
+  also include merging numbers with intervals."
+  [generic-merge-operator]
+  (doto generic-merge-operator
+    (go/assign-operation (fn [content increment]
+                           (let [new-range (intersect-intervals content increment)]
+                             (if (empty-interval? new-range)
+                               (propaganda/contradiction
+                                (str "Non-overlapping intervals: " content " and " increment))
+                               new-range)))
+                         interval? interval?)
+    (go/assign-operation (fn [content increment]
+                           (ensure-inside increment content))
+                         number? interval?)
+    (go/assign-operation (fn [content increment]
+                           (ensure-inside content increment))
+                         interval? number?)
+    ;; Food for thought: Should flat? be any? and this added to
+    ;; support-values namespace instead?
+    (go/assign-operation (coercing support-values/->supported generic-merge-operator)
+                         support-values/supported? flat?)
+    (go/assign-operation (coercing support-values/->supported generic-merge-operator)
+                         flat? support-values/supported?)))

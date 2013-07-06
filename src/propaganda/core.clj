@@ -46,11 +46,13 @@
   [x]
   (isa? (class x) Contradiction))
 
-(def ^:dynamic *contradictory?* base-contradictory?)
-
-(defn generic-contradictory?
+(defn default-contradictory?
   []
   (generic-operators/generic-operator base-contradictory?))
+
+;; TODO: Could be bound to something throwing an exception as is the
+;; case with *merge*
+(def ^:dynamic *contradictory?* (default-contradictory?))
 
 (defn- merge-base-case
   [content increment]
