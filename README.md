@@ -97,7 +97,6 @@ I have not previously worked with propagtors, so this will also be an exploratio
 
 ## Backlog
 
-- Add value provence datatype and merge function
 - More examples on tgk.github.io/propaganda
 - Add TMS datatype and merge function
 - Add interesting datatypes, such as Joda time
