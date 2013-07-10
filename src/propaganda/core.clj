@@ -29,6 +29,14 @@
          (propagator)))
      (ref-set alerting? false))))
 
+;; TODO: Having a global ref is not nice - alternatives welcomed
+(def ^:private all-propagators
+  (ref nil))
+
+(defn alert-all-propagators!
+  []
+  (alert-propagators @all-propagators))
+
 (defprotocol Cell
   (new-neighbour! [this new-neighbour])
   (add-content    [this increment])
@@ -89,6 +97,7 @@
         (dosync
          (when (not (contains? (set @neighbours) new-neighbour))
            (alter neighbours conj new-neighbour)
+           (alter all-propagators conj new-neighbour)
            (alert-propagators [new-neighbour]))))
       (add-content
         [this increment]

@@ -35,8 +35,16 @@
   (apply clojure.set/union (map :support-set supports)))
 
 (defn- implies?
+  "Returns true if the val-1 information implies val-2 is val-1."
   [merge-operator val-1 val-2]
   (= val-1 (merge-operator val-1 val-2)))
+
+(defn subsumes?
+  "Returns true iff the information in support-2 is deducible from
+  support-1."
+  [merge-operator support-1 support-2]
+  (and (implies? merge-operator (:value support-1) (:value support-2))
+       (clojure.set/subset? (:support-set support-2) (:support-set support-1))))
 
 (defn extend-merge
   "Extends the generic merge operator with support for supported
