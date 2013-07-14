@@ -37,7 +37,7 @@
                                support-values/extend-contradictory?)]
    (binding [*merge* custom-merge
              ;; No contradictions are found, but including it anyways
-             *contradictory?* custom-contradictory?
+             *contradictory?* custom-contradictory?]
      (let [building-height (make-cell)
 
            fall-time       (make-cell)
