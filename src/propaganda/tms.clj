@@ -40,7 +40,7 @@
               #{support})))))
 
 (defn tms-assimilate
-  "Incorporate stuff into tms. Stuff can be nothing, a supported value
+  "Incorporate stuff into tms. stuff can be nothing, a supported value
   or a tms."
   [merge-operator tms stuff]
   (cond
@@ -96,27 +96,28 @@
     (reduce merge-operator propaganda/nothing relevant-supports)))
 
 (defn check-consistent!
-  [contradictory? support]
-  (when (contradictory? support)
+  [support]
+  (when (propaganda/*contradictory?* support)
     (process-no-good! (:support-set support))))
 
 ;; Extending merge
 
 (defn extend-merge
-  [generic-merge-operator contradictory?]
+  "Extends merge. propaganda.core/*contradictory* must be set first."
+  [generic-merge-operator]
   (go/assign-operation generic-merge-operator
                        ;; content increment
                        (fn [tms1 tms2]
                          (let [candidate (tms-assimilate tms1 tms2)
                                consequence (strongest-consequence candidate)]
-                           (check-consistent! contradictory? consequence)
+                           (check-consistent! consequence)
                            (tms-assimilate generic-merge-operator candidate consequence)))
                        tms? tms?))
 
 ;; Querying
 
 (defn tms-query
-  [contradictory? tms]
+  [tms]
   (let [answer (strongest-consequence tms)
         better-tms (tms-assimilate tms answer)]
     (if (not= tms better-tms)
@@ -125,7 +126,7 @@
                   ;; it would no longer be immutable. Let's try not to
                   ;; do that, and see what happens
       )
-    (check-consistent! contradictory? answer)
+    (check-consistent! answer)
     answer))
 
 ;; Kicking out and bringing in
@@ -145,3 +146,29 @@
     (mark-premise-in! premise)
     (when was-out?
       (propaganda/alert-all-propagators!))))
+
+(defn tms-unpacking
+  "Returns a function that will find the current values of its
+  arguments. If all are different from nothing, it will return a new tms
+  with the value of f mapped over the values of the arguments."
+  [f]
+  (fn [& args]
+    (let [relevant-information (map tms-query args)]
+      (if (some propaganda/nothing? relevant-information)
+        propaganda/nothing
+        (make-tms (apply f relevant-information))))))
+
+(defn full-tms-unpacking
+  "Returns a function that will unpack its arguments to using
+  tms-unpacking, pass it through supported-unpacking, which will
+  guarantee the correct supported values are set, and use the value of
+  f."
+  [f]
+  (tms-unpacking (support-values/supported-unpacking f)))
+
+(defn ->tms
+  "Ensures thing is a tms."
+  [thing]
+  (if (tms? thing)
+    thing
+    (make-tms (support-values/->supported thing))))

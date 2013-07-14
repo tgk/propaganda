@@ -1,7 +1,8 @@
 (ns propaganda.intervals
   (:require [propaganda.core :as propaganda]
             [propaganda.generic-operators :as go]
-            [propaganda.support-values :as support-values]))
+            [propaganda.support-values :as support-values]
+            [propaganda.tms :as tms]))
 
 ;; Interval arithmetics
 
@@ -131,6 +132,7 @@
 ;; TODO: Remember to extend this list when more operations are
 ;; implemented
 (doseq [generic-op [generic-mul generic-div]]
+  ;; supported values support
   (go/assign-operation generic-op
                        (support-values/supported-unpacking generic-op)
                        support-values/supported? support-values/supported?)
@@ -139,12 +141,31 @@
                        support-values/supported? flat?)
   (go/assign-operation generic-op
                        (coercing support-values/->supported generic-op)
-                       flat? support-values/supported?))
+                       flat? support-values/supported?)
+  ;; tms support
+  (go/assign-operation generic-op
+                       (tms/full-tms-unpacking generic-op)
+                       tms/tms? tms/tms?)
+  (go/assign-operation generic-op
+                       (coercing tms/->tms generic-op)
+                       tms/tms? support-values/supported?)
+  (go/assign-operation generic-op
+                       (coercing tms/->tms generic-op)
+                       support-values/supported? tms/tms?)
+  (go/assign-operation generic-op
+                       (coercing tms/->tms generic-op)
+                       tms/tms? flat?)
+  (go/assign-operation generic-op
+                       (coercing tms/->tms generic-op)
+                       flat? tms/tms?))
 
 (doseq [generic-op [generic-square generic-sqrt]]
   (go/assign-operation generic-op
                        (support-values/supported-unpacking generic-op)
-                       support-values/supported?))
+                       support-values/supported?)
+  (go/assign-operation generic-op
+                       (tms/full-tms-unpacking generic-op)
+                       tms/tms?))
 
 ;; Extend supplied merge
 
@@ -166,9 +187,17 @@
     (go/assign-operation (fn [content increment]
                            (ensure-inside content increment))
                          interval? number?)
-    ;; Food for thought: Should flat? be any? and this added to
-    ;; support-values namespace instead?
+    ;; support values merging
     (go/assign-operation (coercing support-values/->supported generic-merge-operator)
                          support-values/supported? flat?)
     (go/assign-operation (coercing support-values/->supported generic-merge-operator)
-                         flat? support-values/supported?)))
+                         flat? support-values/supported?)
+    ;; tms merging
+    (go/assign-operation (coercing tms/->tms generic-merge-operator)
+                         tms/tms? support-values/supported?)
+    (go/assign-operation (coercing tms/->tms generic-merge-operator)
+                         support-values/supported? tms/tms?)
+    (go/assign-operation (coercing tms/->tms generic-merge-operator)
+                         tms/tms? flat?)
+    (go/assign-operation (coercing tms/->tms generic-merge-operator)
+                         flat? tms/tms?)))
