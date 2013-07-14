@@ -70,10 +70,9 @@
 
 (defn default-merge
   "The default merge function returns the content if the increment is
-  nothing, and the increment if the content is nothing. This aligns with
-  the cond behaviour in add-content from the previous sections.
-  Otherwise just checks to see if the values are the same, the default
-  merge function can be extended using assign-operation."
+  nothing, and the increment if the content is nothing.  Otherwise just
+  checks to see if the values are the same, the default merge function
+  can be extended using assign-operation."
   []
   (doto (generic-operators/generic-operator merge-base-case)
     (generic-operators/assign-operation (fn [content increment] content)
