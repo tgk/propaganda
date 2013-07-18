@@ -97,6 +97,7 @@ I have not previously worked with propagtors, so this will also be an exploratio
 
 ## Backlog
 
+- An example that isn't based on intervals - something that isn't symetric to justify using generic operators over protocols (if no examples can be found, maybe switch to protocols)
 - More examples on tgk.github.io/propaganda
 - Add TMS datatype and merge function
 - Add interesting datatypes, such as Joda time
