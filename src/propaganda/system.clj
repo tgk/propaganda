@@ -164,6 +164,49 @@
      (PropagatorSystem.
       {} {} merge contradictory? [] false)))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn lift-to-cell-contents
+  "Returns a safe-guarded version of f which ensures that all arguments
+  are different than nothing."
+  [f]
+  (fn [& args]
+    (if (some nothing? args)
+      nothing
+      (apply f args))))
+
+(defn function->propagator-constructor
+  "Returns a propagtor constructor which will lift the content of f
+  applied to the first cells to the last cell."
+  [f]
+  (fn [system & cells]
+    (let [inputs (butlast cells)
+          output (last cells)
+          lifted-f (lift-to-cell-contents f)]
+      (add-propagator
+       system
+       inputs
+       (fn [system]
+         (add-value
+          system
+          output
+          (apply lifted-f (map (partial get-value system) inputs))))))))
+
+(defn constant
+  [value]
+  (function->propagator-constructor (fn [] value)))
+
+(def incer
+  (function->propagator-constructor (fn [i] (inc i))))
+
+(let [c (constant 42)]
+  (-> (make-system)
+      (add-value :foo 42)
+      (c :foo)))
+
+(-> (make-system)
+    (incer :foo :baz)
+    (add-value :foo 42))
 
 #_(with-pre-hook! #'add-value
   (fn [system cell value]
