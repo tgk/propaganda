@@ -1,6 +1,5 @@
 (ns propaganda.system
-  (:require [propaganda.generic-operators :as generic-operators])
-  (:require [dire.core :refer [with-pre-hook! with-post-hook!]]))
+  (:require [propaganda.generic-operators :as generic-operators]))
 
 (defrecord PropagatorSystem
     [values propagators merge contradictory? alert-queue freezing?])
@@ -25,10 +24,6 @@
   [thing]
   (not= nothing thing))
 
-
-
-
-
 (defrecord Contradiction [reason])
 
 (defn contradiction
@@ -42,10 +37,6 @@
 (defn default-contradictory?
   []
   (generic-operators/generic-operator base-contradictory?))
-
-
-
-
 
 (defn- merge-base-case
   [content increment]
@@ -65,22 +56,9 @@
     (generic-operators/assign-operation (fn [content increment] increment)
                                          nothing? any?)))
 
-;;;;;; STOP
+;;;;;;
 
-#_(defrecord PropagatorSystem
-    [values propagators merge contradictory? alert-queue])
-
-#_(defprotocol PropagatorSystemProtocol
-  (add-value      [this cell value])
-  (get-value      [this cell])
-  (add-propagator [this cells f])
-  (cool           [this])
-  (stabile?       [this])
-
-  (-alert-propagators     [this fs])
-  (-alert-all-propagators [this]))
-
-(defn update-keys
+(defn- update-keys
   [m ks f & args]
   (reduce (fn [m k] (assoc m k (apply f (get m k) args)))
           m
@@ -195,36 +173,3 @@
 (defn constant
   [value]
   (function->propagator-constructor (fn [] value)))
-
-(def incer
-  (function->propagator-constructor (fn [i] (inc i))))
-
-(let [c (constant 42)]
-  (-> (make-system)
-      (add-value :foo 42)
-      (c :foo)))
-
-(-> (make-system)
-    (incer :foo :baz)
-    (add-value :foo 42))
-
-#_(with-pre-hook! #'add-value
-  (fn [system cell value]
-    (println "add-value" cell value)))
-
-#_(with-pre-hook! #'stabile?
-  (fn [system]
-    (println "stabile?" system)))
-
-#_(with-post-hook! #'stabile?
-  (fn [result]
-    (println "stabile? was" result)))
-
-#_(-> (make-system)
-    (add-value :foo :bar)
-    (add-value :foo :bar)
-    (add-value :baz 42)
-    (add-propagator [:foo]
-                    (fn [system]
-                      (add-value system :baz 42)))
-    all-propagators)

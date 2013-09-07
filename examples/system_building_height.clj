@@ -1,3 +1,5 @@
+(in-ns 'user)
+
 (use 'propaganda.system)
 (use 'propaganda.system-intervals)
 
@@ -47,6 +49,6 @@
     (get-value result-system :fall-time)]))
 ;; => [45.0
 ;;     {:lo 54.9, :hi 55.1}
-;;     {:lo 0.3, :hi 0.32}
-;;     {:lo 0.36, :hi 0.37}
-;;     {:lo 2.9, :hi 3.1}]
+;;     {:lo 0.3, :hi 0.30327868852459017}
+;;     {:lo 0.366, :hi 0.37}
+;;     {:lo 3.032004969797108, :hi 3.0321598338046556}]

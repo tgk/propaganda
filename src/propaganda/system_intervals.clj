@@ -104,15 +104,17 @@
 (defn product
   "Creates the product relation x * y = total between the cells."
   [system x y total]
-  (multiplier system x y total)
-  (divider    system total x y)
-  (divider    system total y x))
+  (-> system
+      (multiplier x y total)
+      (divider total x y)
+      (divider total y x)))
 
 (defn quadratic
   "Creates the quadratic relation x * x = x-squared between the cells."
   [system x x-squared]
-  (squarer system x x-squared)
-  (sqrter  system x-squared x))
+  (-> system
+      (squarer x x-squared)
+      (sqrter x-squared x)))
 
 ;; Supported values
 
