@@ -44,7 +44,7 @@
 
 (defn interval?
   [x]
-  (isa? (class x) Interval))
+  (isa? (type x) Interval))
 
 (defn ensure-inside
   [interval number]

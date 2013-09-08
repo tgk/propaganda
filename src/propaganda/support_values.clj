@@ -17,7 +17,7 @@
 
 (defn supported?
   [x]
-  (isa? (class x) Supported))
+  (isa? (type x) Supported))
 
 (defn- more-informative-support?
   "Returns true if the support-set for support-1 contains strictly more
