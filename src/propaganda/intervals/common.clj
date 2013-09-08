@@ -1,8 +1,7 @@
-(ns propaganda.system-intervals
-  (:require [propaganda.system :as propaganda]
+(ns propaganda.intervals.common
+  (:require [propaganda.values :as values]
             [propaganda.generic-operators :as go]
-            [propaganda.support-values :as support-values]
-            [propaganda.tms :as tms]))
+            [propaganda.support-values :as support-values]))
 
 ;; Interval arithmetics
 
@@ -51,7 +50,7 @@
   [interval number]
   (if (<= (:lo interval) number (:hi interval))
     number
-    (propaganda/contradiction
+    (values/contradiction
      (str number " not in interval [" (:lo interval?) ", " (:hi interval) "]"))))
 
 ;; Generic standard arithmetic operations
@@ -92,30 +91,6 @@
                      sqrt-interval
                      interval?)))
 
-;; Propagator constructors
-
-(def multiplier (propaganda/function->propagator-constructor generic-mul))
-(def divider    (propaganda/function->propagator-constructor generic-div))
-(def squarer    (propaganda/function->propagator-constructor generic-square))
-(def sqrter     (propaganda/function->propagator-constructor generic-sqrt))
-
-;; Multidirectional propagators constructors (relations)
-
-(defn product
-  "Creates the product relation x * y = total between the cells."
-  [system x y total]
-  (-> system
-      (multiplier x y total)
-      (divider total x y)
-      (divider total y x)))
-
-(defn quadratic
-  "Creates the quadratic relation x * x = x-squared between the cells."
-  [system x x-squared]
-  (-> system
-      (squarer x x-squared)
-      (sqrter x-squared x)))
-
 ;; Supported values
 
 (defn boolean?
@@ -143,31 +118,12 @@
                        support-values/supported? flat?)
   (go/assign-operation generic-op
                        (coercing support-values/->supported generic-op)
-                       flat? support-values/supported?)
-  ;; tms support
-  (go/assign-operation generic-op
-                       (tms/full-tms-unpacking generic-op)
-                       tms/tms? tms/tms?)
-  (go/assign-operation generic-op
-                       (coercing tms/->tms generic-op)
-                       tms/tms? support-values/supported?)
-  (go/assign-operation generic-op
-                       (coercing tms/->tms generic-op)
-                       support-values/supported? tms/tms?)
-  (go/assign-operation generic-op
-                       (coercing tms/->tms generic-op)
-                       tms/tms? flat?)
-  (go/assign-operation generic-op
-                       (coercing tms/->tms generic-op)
-                       flat? tms/tms?))
+                       flat? support-values/supported?))
 
 (doseq [generic-op [generic-square generic-sqrt]]
   (go/assign-operation generic-op
                        (support-values/supported-unpacking generic-op)
-                       support-values/supported?)
-  (go/assign-operation generic-op
-                       (tms/full-tms-unpacking generic-op)
-                       tms/tms?))
+                       support-values/supported?))
 
 ;; Extend supplied merge
 
@@ -179,7 +135,7 @@
     (go/assign-operation (fn [content increment]
                            (let [new-range (intersect-intervals content increment)]
                              (if (empty-interval? new-range)
-                               (propaganda/contradiction
+                               (values/contradiction
                                 (str "Non-overlapping intervals: " content " and " increment))
                                new-range)))
                          interval? interval?)
@@ -193,13 +149,4 @@
     (go/assign-operation (coercing support-values/->supported generic-merge-operator)
                          support-values/supported? flat?)
     (go/assign-operation (coercing support-values/->supported generic-merge-operator)
-                         flat? support-values/supported?)
-    ;; tms merging
-    (go/assign-operation (coercing tms/->tms generic-merge-operator)
-                         tms/tms? support-values/supported?)
-    (go/assign-operation (coercing tms/->tms generic-merge-operator)
-                         support-values/supported? tms/tms?)
-    (go/assign-operation (coercing tms/->tms generic-merge-operator)
-                         tms/tms? flat?)
-    (go/assign-operation (coercing tms/->tms generic-merge-operator)
-                         flat? tms/tms?)))
+                         flat? support-values/supported?)))

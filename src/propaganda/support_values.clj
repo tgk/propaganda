@@ -1,9 +1,6 @@
 (ns propaganda.support-values
   (:require clojure.set
-            [propaganda.generic-operators :as go]
-
-            ;; For testing purposes
-            [propaganda.core :as p]))
+            [propaganda.generic-operators :as go]))
 
 (defrecord Supported
     [value support-set])
@@ -98,15 +95,3 @@
   (if (supported? thing)
     thing
     (supported thing #{})))
-
-#_(let [my-merge (p/default-merge)
-      my-contradictory? (p/default-contradictory?)]
-  (extend-merge my-merge)
-  (extend-contradictory? my-contradictory?)
-  (binding [p/*merge* my-merge
-            p/*contradictory?* my-contradictory?]
-    (let [cell (p/make-cell)]
-      (p/add-content cell (supported 42 :i-say-so))
-      (p/add-content cell (Supported. 42 #{:i-say-so :so-do-i}))
-      #_(p/add-content cell (Supported. 43 #{:i-say-so :so-do-i}))
-      (p/get-content cell))))

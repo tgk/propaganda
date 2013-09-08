@@ -1,6 +1,7 @@
-(ns propaganda.tms
+(ns propaganda.tms.stm
   (:require [clojure.set]
-            [propaganda.core :as propaganda]
+            [propaganda.values :as values]
+            [propaganda.stm :as propaganda]
             [propaganda.support-values :as support-values]
             [propaganda.generic-operators :as go]))
 
@@ -14,7 +15,6 @@
   [thing]
   (isa? (class thing) TruthMaintenanceSystem))
 
-;; Passing merge operator around - might just want to use propaganda/*merge* ?
 (defn tms-assimilate-one
   "Adds support to the tms, but only if it adds a more precise
   value (that is, a different value than the existing) when combined
@@ -44,7 +44,7 @@
   or a tms."
   [merge-operator tms stuff]
   (cond
-   (propaganda/nothing? stuff) tms
+   (values/nothing? stuff) tms
    (support-values/supported? stuff) (tms-assimilate-one tms stuff)
    (tms? stuff) (reduce (partial tms-assimilate-one merge-operator)
                         tms
@@ -93,7 +93,7 @@
   "Returns the most informative consequence of the current worldview."
   [merge-operator tms]
   (let [relevant-supports (filter all-premises-in? (:supported-values tms))]
-    (reduce merge-operator propaganda/nothing relevant-supports)))
+    (reduce merge-operator values/nothing relevant-supports)))
 
 (defn check-consistent!
   [support]
@@ -154,8 +154,8 @@
   [f]
   (fn [& args]
     (let [relevant-information (map tms-query args)]
-      (if (some propaganda/nothing? relevant-information)
-        propaganda/nothing
+      (if (some values/nothing? relevant-information)
+        values/nothing
         (make-tms (apply f relevant-information))))))
 
 (defn full-tms-unpacking

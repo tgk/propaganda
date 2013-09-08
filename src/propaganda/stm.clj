@@ -1,17 +1,8 @@
-(ns propaganda.core
+(ns propaganda.stm
+  (:use propaganda.values)
   (:require [propaganda.generic-operators :as generic-operators]))
 
 ;; Propagator framework
-
-(def nothing (Object.))
-
-(defn nothing?
-  [thing]
-  (= nothing thing))
-
-(defn any?
-  [thing]
-  (not= nothing thing))
 
 (def alerting? (ref false))
 (def alert-queue (ref clojure.lang.PersistentQueue/EMPTY))
@@ -42,48 +33,14 @@
   (add-content    [this increment])
   (get-content    [this]))
 
-;; *merge* is introduced as the merging function
-
-(defrecord Contradiction [reason])
-
-(defn contradiction
-  [reason]
-  (Contradiction. reason))
-
-(defn- base-contradictory?
-  [x]
-  (isa? (class x) Contradiction))
-
-(defn default-contradictory?
-  []
-  (generic-operators/generic-operator base-contradictory?))
+(def ^:dynamic *merge*
+  "The merge function used by the cells. Must be bound."
+  (fn [& args]
+    (throw (Exception. "Missing propaganda.stm/*merge* binding."))))
 
 ;; TODO: Could be bound to something throwing an exception as is the
 ;; case with *merge*
 (def ^:dynamic *contradictory?* (default-contradictory?))
-
-(defn- merge-base-case
-  [content increment]
-  (if (= content increment)
-    content
-    (contradiction (str (pr-str content) " != " (pr-str increment)))))
-
-(defn default-merge
-  "The default merge function returns the content if the increment is
-  nothing, and the increment if the content is nothing.  Otherwise just
-  checks to see if the values are the same, the default merge function
-  can be extended using assign-operation."
-  []
-  (doto (generic-operators/generic-operator merge-base-case)
-    (generic-operators/assign-operation (fn [content increment] content)
-                                        any? nothing?)
-    (generic-operators/assign-operation (fn [content increment] increment)
-                                         nothing? any?)))
-
-(def ^:dynamic *merge*
-  "The merge function used by the cells. Must be bound."
-  (fn [& args]
-    (throw (Exception. "Missing propaganda.core/*merge* binding."))))
 
 (defn make-cell
   []

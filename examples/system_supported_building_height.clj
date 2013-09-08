@@ -1,7 +1,9 @@
 (in-ns 'user)
 
 (use 'propaganda.system)
-(use 'propaganda.system-intervals)
+(use 'propaganda.values)
+(use '[propaganda.intervals.common :exclude [extend-merge]])
+(use 'propaganda.intervals.system)
 (require '(propaganda [support-values :as support-values]))
 
 (defn fall-duration
