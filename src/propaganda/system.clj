@@ -1,5 +1,5 @@
 (ns propaganda.system
-  (:use [propaganda.values]))
+  (:require [propaganda.values :as values]))
 
 (defrecord PropagatorSystem
     [values propagators merge contradictory? alert-queue freezing?])
@@ -64,7 +64,7 @@
         freeze))
 
   (get-value [this cell]
-    (get-in this [:values cell] nothing))
+    (get-in this [:values cell] values/nothing))
 
   (add-propagator [this cells f]
     (-> this
@@ -91,7 +91,8 @@
 
 (defn make-system
   ([]
-     (make-system (default-merge) (default-contradictory?)))
+     (make-system (values/default-merge)
+                  (values/default-contradictory?)))
   ([merge contradictory?]
      (PropagatorSystem.
       {} {} merge contradictory? [] false)))
@@ -103,8 +104,8 @@
   are different than nothing."
   [f]
   (fn [& args]
-    (if (some nothing? args)
-      nothing
+    (if (some values/nothing? args)
+      values/nothing
       (apply f args))))
 
 (defn function->propagator-constructor

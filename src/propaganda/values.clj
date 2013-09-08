@@ -1,7 +1,7 @@
 (ns propaganda.values
   (:require [propaganda.generic-operators :as generic-operators]))
 
-(def nothing (Object.))
+(def nothing ::nothing)
 
 (defn nothing?
   [thing]
@@ -19,7 +19,7 @@
 
 (defn- base-contradictory?
   [x]
-  (isa? (class x) Contradiction))
+  (isa? (type x) Contradiction))
 
 (defn default-contradictory?
   []
