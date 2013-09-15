@@ -79,7 +79,10 @@
   ;; into cool
   (cool [this]
     (if-let [[f & t] (:alert-queue this)]
-      (f (assoc this :alert-queue t))
+      (let [new-system (f (assoc this :alert-queue t))]
+        (if (:audit? (meta this))
+          (with-meta new-system {:audit? true :prev this})
+          new-system))
       this))
 
   (alert-all-propagators [this]
