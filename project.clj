@@ -1,4 +1,4 @@
-(defproject propaganda "0.1.2"
+(defproject propaganda "0.1.3-SNAPSHOT"
   :description "(Hopefully) extensible propagator library"
   :url "http://github.com/tgk/propaganda"
   :license {:name "Eclipse Public License"
