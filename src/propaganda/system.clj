@@ -22,19 +22,25 @@
   "Helper for adding a value to the system, without cooling it."
   [system cell value]
   (let [content (get-value system cell)
-        answer ((:merge system) content value)]
-    (cond
+        answer ((:merge system) content value)
+        new-system (cond
 
-     (= answer content)
-     system
+                    (= answer content)
+                    system
 
-     ((:contradictory? system) answer)
-     (throw (ex-info "Inconsistency" {:contradiction answer}))
+                    ((:contradictory? system) answer)
+                    (throw (ex-info "Inconsistency" {:contradiction answer}))
 
-     :else
-     (-> system
-         (assoc-in [:values cell] answer)
-         (update-in [:alert-queue] concat (get-in system [:propagators cell]))))))
+                    :else
+                    (-> system
+                        (assoc-in [:values cell]
+                                  answer)
+                        (update-in [:alert-queue]
+                                   concat
+                                   (get-in system [:propagators cell]))))]
+    (if (:audit? (meta system))
+      (with-meta new-system {:audit? true :prev system})
+      new-system)))
 
 ;; freezing? is used to avoid deep recursion. Discuss if there are any
 ;; states, e.g. on exception, that might ruin this approach
@@ -79,10 +85,7 @@
   ;; into cool
   (cool [this]
     (if-let [[f & t] (:alert-queue this)]
-      (let [new-system (f (assoc this :alert-queue t))]
-        (if (:audit? (meta this))
-          (with-meta new-system {:audit? true :prev this})
-          new-system))
+      (f (assoc this :alert-queue t))
       this))
 
   (alert-all-propagators [this]
