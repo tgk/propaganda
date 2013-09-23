@@ -1,3 +1,5 @@
+<img src="https://raw.github.com/tgk/propaganda/master/doc/propaganda.png" alt="Punching values through the system" title="Propaganda" align="right" />
+
 # propaganda
 
 The propaganda library is a Clojure implementation of the propagator computational model described in [The Art of the Propagator](http://dspace.mit.edu/handle/1721.1/44215). The aim of the library is to be easy to use and reason about, yet extensible.
