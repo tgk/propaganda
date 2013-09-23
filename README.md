@@ -1,12 +1,12 @@
-<img src="https://raw.github.com/tgk/propaganda/master/doc/propaganda.png" alt="Punching values through the system" title="Propaganda" align="right" />
-
 # propaganda
+
+<img src="https://raw.github.com/tgk/propaganda/master/doc/propaganda.png" alt="Punching values through the system" title="Propaganda" align="right" />
 
 The propaganda library is a Clojure implementation of the propagator computational model described in [The Art of the Propagator](http://dspace.mit.edu/handle/1721.1/44215). The aim of the library is to be easy to use and reason about, yet extensible.
 
-## Artifact
+There is a Clojars release containing an implementation that works in both Clojure and ClojureScript.
 
-Leiningen dependency:
+The leiningen dependency is
 
     [propaganda "0.1.2"]
 
