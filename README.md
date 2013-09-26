@@ -4,6 +4,8 @@
 
 The propaganda library is a Clojure implementation of the propagator computational model described in [The Art of the Propagator](http://dspace.mit.edu/handle/1721.1/44215). The aim of the library is to be easy to use and reason about, yet extensible.
 
+Two different strategies have been implemented: one using the [Clojure STM](http://clojure.org/refs) for handling the propagation of values in the system; and one representing the system as an immutable value, without the aid of any underlying transactional model. The latter approach makes it possible to use propagators from javascript, and is the biggest contribution from this project.
+
 There is a Clojars release containing an implementation that works in both Clojure and ClojureScript.
 
 The leiningen dependency is
@@ -117,4 +119,4 @@ I have not previously worked with propagtors, so this will also be an exploratio
 
 ## Thanks to
 
-[Ragnar Dahlen](https://github.com/ragnard/) and [Kasper Langer](https://github.com/kasperlanger) for feedback on the library.
+[Ragnar Dahlén](https://github.com/ragnard/) and [Kasper Langer](https://github.com/kasperlanger) for feedback on the library.
