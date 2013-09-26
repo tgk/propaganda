@@ -12,9 +12,9 @@ The leiningen dependency is
 
 ## Tutorial
 
-The `gh-pages` branch of this project contains a brief explanation of the basics of the propagator computational model. The page can be visited [here](http://tgk.github.io/propaganda/). The [The Art of the Propagator](http://dspace.mit.edu/handle/1721.1/44215) contains a more in-depth explanation of how propagation can be implemented.
+The `gh-pages` branch of this project contains a brief explanation of the basics of the propagator computational model. The page can be visited [here](http://tgk.github.io/propaganda/). [The Art of the Propagator](http://dspace.mit.edu/handle/1721.1/44215) contains a more in-depth explanation of how propagation can be implemented.
 
-To use the propaganda library, you need to define a merge, function, create cells and set up propagators. In this short example we just use the default merger function, we define the square and square-root propagator and set up relations beween simple cells. An example where values are intervals and merging is performed by taking the intersection of intervals can be found in `examples/building_height.clj`
+To use the propaganda library, you need to define a merge, function, create cells and set up propagators. In this short example we just use the default merger function, we define the square and square-root propagator and set up relations beween simple cells. An example where values are intervals and merging is performed by taking the intersection of intervals can be found in [`examples/building_height.clj`](https://github.com/tgk/propaganda/blob/master/examples/building_height.clj).
 
 
 ```
@@ -121,4 +121,3 @@ I have not previously worked with propagtors, so this will also be an exploratio
 - More examples on tgk.github.io/propaganda
 - Add TMS datatype and merge function
 - Add interesting datatypes, such as Joda time
-- Make available from ClojureScript
