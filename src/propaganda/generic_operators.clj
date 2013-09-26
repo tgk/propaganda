@@ -27,7 +27,16 @@
     (apply default args)))
 
 (defn generic-operator
-  "Returns a generic operation with default operator default."
+  "Returns a generic operation with default operator default. Generic
+  operators can be extended using assign-operation. For example, we can
+  define a generic plus operator that works on numbers and vectors:
+
+  (let [plus (generic-operator +)]
+    (doto plus
+      (assign-operation concat vector? vector?))
+    [(plus 1 2)
+     (plus [1 2 3] [4 5])])
+  ;; => [3 [1 2 3 4 5]]"
   [default]
   (let [pred&ops (atom nil)]
     (with-meta

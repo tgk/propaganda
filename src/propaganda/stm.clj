@@ -8,7 +8,8 @@
 (def alert-queue (ref clojure.lang.PersistentQueue/EMPTY))
 
 (defn alert-propagators
-  "Simple implementation of alerting propagators."
+  "Simple implementation of alerting propagators. Performed in a
+  dosync."
   [propagators]
   (dosync
    (alter alert-queue into propagators)
@@ -20,29 +21,40 @@
          (propagator)))
      (ref-set alerting? false))))
 
-;; TODO: Having a global ref is not nice - alternatives welcomed
 (def ^:private all-propagators
+  "A reference to all the propagators in the runtime."
   (ref nil))
 
 (defn alert-all-propagators!
+  "Alerts all propagators in the runtime."
   []
   (alert-propagators @all-propagators))
 
 (defprotocol Cell
-  (new-neighbour! [this new-neighbour])
-  (add-content    [this increment])
-  (get-content    [this]))
+  "A cell with some content. All methods on cells are performed in a
+  dosync."
+  (new-neighbour! [this new-neighbour]
+    "Adds a new function that gets invoked on content addition to the
+    cell.")
+  (add-content    [this increment]
+    "Adds content to the cell. If the increment is inconsistent with the
+    current content, an exception is thrown.")
+  (get-content    [this]
+    "Gets the current content of the cell."))
 
 (def ^:dynamic *merge*
   "The merge function used by the cells. Must be bound."
   (fn [& args]
     (throw (Exception. "Missing propaganda.stm/*merge* binding."))))
 
-;; TODO: Could be bound to something throwing an exception as is the
-;; case with *merge*
-(def ^:dynamic *contradictory?* (default-contradictory?))
+(def ^:dynamic *contradictory?*
+  "The contradictory function to be used."
+  (default-contradictory?))
 
 (defn make-cell
+  "Creates a new Cell with empty content. The currently bound *merge*
+  and *contradictory?* are used for merging and determining if there are
+  contradictions."
   []
   (let [neighbours (ref nil)
         content    (ref nothing)]
@@ -73,9 +85,7 @@
 
 (defn propagator
   "Adds a new propagator (to-do) to the neighbours and guarantees that
-  it is called (although adding it should have that side-effect, but not
-  doing it causes a failure - there is something I haven't thought
-  through)"
+  it is called."
   [neighbours to-do]
   (doseq [cell neighbours]
     (new-neighbour! cell to-do))

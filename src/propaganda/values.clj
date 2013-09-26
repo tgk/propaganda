@@ -1,31 +1,41 @@
 (ns propaganda.values
   (:require [propaganda.generic-operators :as generic-operators]))
 
-(def nothing ::nothing)
+(def nothing
+  "The value representing no content of a cell."
+  ::nothing)
 
 (defn nothing?
+  "Determins if thing is nothing."
   [thing]
   (= nothing thing))
 
 (defn any?
+  "Determins if thing is different than nothing."
   [thing]
   (not= nothing thing))
 
 (defrecord Contradiction [reason])
 
 (defn contradiction
+  "Creates a new contradiction with the given reason, a string."
   [reason]
   (Contradiction. reason))
 
 (defn- base-contradictory?
+  "Base version of the contradiction function."
   [x]
   (isa? (type x) Contradiction))
 
 (defn default-contradictory?
+  "Constructs a default contradictory? generic operator that can be
+  extended using assign-operation from the generic-operators namespace."
   []
   (generic-operators/generic-operator base-contradictory?))
 
 (defn- merge-base-case
+  "Base version of the merge function. Only identical content and
+  increments does not give rise to a contradiction."
   [content increment]
   (if (= content increment)
     content
