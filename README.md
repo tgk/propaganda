@@ -114,3 +114,7 @@ The objective of this project is to create an extinsible propagator library for 
 Along with the library itself, the project should supply documentation of the API, good examples and tutorials.
 
 I have not previously worked with propagtors, so this will also be an exploration for me.
+
+## Thanks to
+
+[Ragnar Dahlen](https://github.com/ragnard/) and [Kasper Langer](https://github.com/kasperlanger) for feedback on the library.
