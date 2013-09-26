@@ -35,7 +35,7 @@ that is attempted to be merged will return a contradiction
 `nothing` can be merged with `nothing` and will return `nothing`
 ```
 (my-merge nothing nothing)
-;; => #<Object ...>
+;; => :propaganda.values/nothing
 ```
 
 Anything else will be the result of the merge

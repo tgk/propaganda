@@ -9,7 +9,7 @@
 
 ;; nothing can be merged with nothing and will return nothing
 (my-merge nothing nothing)
-;; => #<Object ...>
+;; => :propaganda.values/nothing
 
 ;; anything else will be the result of the merge
 (my-merge nothing 1)
