@@ -6,44 +6,44 @@
 
   (testing "Can chage the value of a cell"
     (let [c (p/make-cell)]
-      (is (p/nothing? (p/get-content c)))
+      (is (p/nothing? (p/get-value c)))
       (binding [p/*merge* (p/default-merge)]
-        (p/add-content c :foo)
-        (is (not (p/nothing? (p/get-content c))))
-        (is (= :foo (p/get-content c))))))
+        (p/add-value c :foo)
+        (is (not (p/nothing? (p/get-value c))))
+        (is (= :foo (p/get-value c))))))
 
   (testing "Operating with two cells is safe"
     (let [c (p/make-cell)
           d (p/make-cell)]
-      (is (p/nothing? (p/get-content c)))
-      (is (p/nothing? (p/get-content d)))
+      (is (p/nothing? (p/get-value c)))
+      (is (p/nothing? (p/get-value d)))
       (binding [p/*merge* (p/default-merge)]
-        (p/add-content c :foo)
-        (is (not (p/nothing? (p/get-content c))))
-        (is (= :foo (p/get-content c)))
-        (is (p/nothing? (p/get-content d))))))
+        (p/add-value c :foo)
+        (is (not (p/nothing? (p/get-value c))))
+        (is (= :foo (p/get-value c)))
+        (is (p/nothing? (p/get-value d))))))
 
   (testing "Merging nothing with nothing yields nothing"
     (let [c (p/make-cell)]
       (binding [p/*merge* (p/default-merge)]
-        (p/add-content c p/nothing))
-      (is (p/nothing? (p/get-content c))))))
+        (p/add-value c p/nothing))
+      (is (p/nothing? (p/get-value c))))))
 
 (deftest default-merge-fails-on-contradictions
 
   (testing "Changing value to same value works"
     (let [c (p/make-cell)]
       (binding [p/*merge* (p/default-merge)]
-        (p/add-content c :foo)
-        (p/add-content c :foo))
-      (is (= :foo (p/get-content c)))))
+        (p/add-value c :foo)
+        (p/add-value c :foo))
+      (is (= :foo (p/get-value c)))))
 
   (testing "Changing value to something new throws an exception"
     (try
       (let [c (p/make-cell)]
         (binding [p/*merge* (p/default-merge)]
-          (p/add-content c :foo)
-          (p/add-content c :bar)))
+          (p/add-value c :foo)
+          (p/add-value c :bar)))
       (assert false "Should have thrown exception")
       (catch Throwable t
              (when-not (.startsWith (.getMessage t) "Inconsistency:")
@@ -62,11 +62,11 @@
           y (p/make-cell)]
       (binding [p/*merge* (p/default-merge)]
         (squarer x y)
-        (is (p/nothing? (p/get-content x)))
-        (is (p/nothing? (p/get-content y)))
-        (p/add-content x 10.0)
-        (is (= 10.0 (p/get-content x)))
-        (is (= 100.0 (p/get-content y)))))))
+        (is (p/nothing? (p/get-value x)))
+        (is (p/nothing? (p/get-value y)))
+        (p/add-value x 10.0)
+        (is (= 10.0 (p/get-value x)))
+        (is (= 100.0 (p/get-value y)))))))
 
 (def sqrter
   (p/function->propagator-constructor
@@ -83,18 +83,18 @@
           y (p/make-cell)]
       (binding [p/*merge* (p/default-merge)]
         (quadratic x y)
-        (is (p/nothing? (p/get-content x)))
-        (is (p/nothing? (p/get-content y)))
-        (p/add-content x 10.0)
-        (is (= 10.0 (p/get-content x)))
-        (is (= 100.0 (p/get-content y))))))
+        (is (p/nothing? (p/get-value x)))
+        (is (p/nothing? (p/get-value y)))
+        (p/add-value x 10.0)
+        (is (= 10.0 (p/get-value x)))
+        (is (= 100.0 (p/get-value y))))))
   (testing "x is the square-root of y"
     (let [x (p/make-cell)
           y (p/make-cell)]
       (binding [p/*merge* (p/default-merge)]
         (quadratic x y)
-        (is (p/nothing? (p/get-content x)))
-        (is (p/nothing? (p/get-content y)))
-        (p/add-content y 100.0)
-        (is (= 100.0 (p/get-content y)))
-        (is (= 10.0 (p/get-content x)))))))
+        (is (p/nothing? (p/get-value x)))
+        (is (p/nothing? (p/get-value y)))
+        (p/add-value y 100.0)
+        (is (= 100.0 (p/get-value y)))
+        (is (= 10.0 (p/get-value x)))))))

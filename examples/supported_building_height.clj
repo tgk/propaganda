@@ -55,42 +55,42 @@
                           building-shadow building-height)
 
 
-       (add-content building-shadow
+       (add-value building-shadow
                     (support-values/supported
                      (make-interval 54.9 55.1)
                      :shadows))
-       (add-content barometer-height
+       (add-value barometer-height
                     (support-values/supported
                      (make-interval 0.3 0.32)
                      :shadows))
-       (add-content barometer-shadow
+       (add-value barometer-shadow
                     (support-values/supported
                      (make-interval 0.36 0.37)
                      :shadows))
 
 
-       (add-content fall-time
+       (add-value fall-time
                     (support-values/supported
                      (make-interval 2.9 3.3)
                      :lousy-fall-time))
 
 
-       (add-content fall-time
+       (add-value fall-time
                     (support-values/supported
                      (make-interval 2.9 3.1)
                      :better-fall-time))
 
 
-       (add-content building-height
+       (add-value building-height
                     (support-values/supported
                      45.0
                      :superintendent))
 
-       [(get-content building-height)
-        (get-content building-shadow)
-        (get-content barometer-height)
-        (get-content barometer-shadow)
-        (get-content fall-time)]))))
+       [(get-value building-height)
+        (get-value building-shadow)
+        (get-value barometer-height)
+        (get-value barometer-shadow)
+        (get-value fall-time)]))))
 ;; [{:value 45.0, :support-set #{:superintendent}}
 ;; {:value {:lo 54.9, :hi 55.1},
 ;;  :support-set #{:superintendent :shadows}}

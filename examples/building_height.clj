@@ -44,21 +44,21 @@
            building-shadow  (make-cell)]
 
        (fall-duration fall-time building-height)
-       (add-content fall-time (make-interval 2.9 3.1))
+       (add-value fall-time (make-interval 2.9 3.1))
 
        (similar-triangles barometer-shadow barometer-height
                           building-shadow building-height)
-       (add-content building-shadow (make-interval 54.9 55.1))
-       (add-content barometer-height (make-interval 0.3 0.32))
-       (add-content barometer-shadow (make-interval 0.36 0.37))
+       (add-value building-shadow (make-interval 54.9 55.1))
+       (add-value barometer-height (make-interval 0.3 0.32))
+       (add-value barometer-shadow (make-interval 0.36 0.37))
 
-       (add-content building-height 45.0)
+       (add-value building-height 45.0)
 
-       [(get-content building-height)
-        (get-content building-shadow)
-        (get-content barometer-height)
-        (get-content barometer-shadow)
-        (get-content fall-time)]))))
+       [(get-value building-height)
+        (get-value building-shadow)
+        (get-value barometer-height)
+        (get-value barometer-shadow)
+        (get-value fall-time)]))))
 ;; => [45
 ;;     {:lo 54.9, :hi 55.1}
 ;;     {:lo 0.3, :hi 0.30327868852459017}

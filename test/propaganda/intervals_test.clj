@@ -45,22 +45,22 @@
        (similar-triangles barometer-shadow barometer-height
                           building-shadow building-height)
 
-       (p/add-content fall-time (i/make-interval 2.9 3.1))
-       (p/add-content building-shadow (i/make-interval 54.9 55.1))
-       (p/add-content barometer-height (i/make-interval 0.3 0.32))
-       (p/add-content barometer-shadow (i/make-interval 0.36 0.37))
-       (p/add-content building-height 45.0)
+       (p/add-value fall-time (i/make-interval 2.9 3.1))
+       (p/add-value building-shadow (i/make-interval 54.9 55.1))
+       (p/add-value barometer-height (i/make-interval 0.3 0.32))
+       (p/add-value barometer-shadow (i/make-interval 0.36 0.37))
+       (p/add-value building-height 45.0)
 
        (is (= 45.0
-              (p/get-content building-height)))
+              (p/get-value building-height)))
        (is (= (i/make-interval 54.9 55.1)
-              (p/get-content building-shadow)))
+              (p/get-value building-shadow)))
        (is (= (i/make-interval 0.3 0.30327868852459017)
-              (p/get-content barometer-height)))
+              (p/get-value barometer-height)))
        (is (= (i/make-interval 0.366 0.37)
-              (p/get-content barometer-shadow)))
+              (p/get-value barometer-shadow)))
        (is (= (i/make-interval  3.025522031629098 3.0321598338046556)
-              (p/get-content fall-time)))))))
+              (p/get-value fall-time)))))))
 
 ;; building height with supported-values example
 
@@ -81,33 +81,33 @@
        (similar-triangles barometer-shadow barometer-height
                           building-shadow building-height)
 
-       (p/add-content building-shadow
+       (p/add-value building-shadow
                       (sv/supported
                        (i/make-interval 54.9 55.1)
                        :shadows))
-       (p/add-content barometer-height
+       (p/add-value barometer-height
                       (sv/supported
                        (i/make-interval 0.3 0.32)
                        :shadows))
-       (p/add-content barometer-shadow
+       (p/add-value barometer-shadow
                       (sv/supported
                        (i/make-interval 0.36 0.37)
                        :shadows))
-       (p/add-content fall-time
+       (p/add-value fall-time
                     (sv/supported
                      (i/make-interval 2.9 3.3)
                      :lousy-fall-time))
-       (p/add-content fall-time
+       (p/add-value fall-time
                       (sv/supported
                        (i/make-interval 2.9 3.1)
                        :better-fall-time))
-       (p/add-content building-height
+       (p/add-value building-height
                       (sv/supported
                        45.0
                        :superintendent))
 
-       (are [c v s] (and (is (= v (:value (p/get-content c))))
-                         (is (= s (:support-set (p/get-content c)))))
+       (are [c v s] (and (is (= v (:value (p/get-value c))))
+                         (is (= s (:support-set (p/get-value c)))))
 
             building-height
             45.0

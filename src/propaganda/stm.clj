@@ -36,10 +36,10 @@
   (new-neighbour! [this new-neighbour]
     "Adds a new function that gets invoked on content addition to the
     cell.")
-  (add-content    [this increment]
+  (add-value    [this increment]
     "Adds content to the cell. If the increment is inconsistent with the
     current content, an exception is thrown.")
-  (get-content    [this]
+  (get-value    [this]
     "Gets the current content of the cell."))
 
 (def ^:dynamic *merge*
@@ -67,7 +67,7 @@
            (alter neighbours conj new-neighbour)
            (alter all-propagators conj new-neighbour)
            (alert-propagators [new-neighbour]))))
-      (add-content
+      (add-value
         [this increment]
         (dosync
          (let [answer (*merge* @content increment)]
@@ -79,7 +79,7 @@
             :else                     (do
                                         (ref-set content answer)
                                         (alert-propagators @neighbours))))))
-      (get-content
+      (get-value
         [this]
         @content))))
 
@@ -110,9 +110,9 @@
           lifted-f (lift-to-cell-contents f)]
       (propagator
        inputs
-       (fn [] (add-content
+       (fn [] (add-value
               output
-              (apply lifted-f (map get-content inputs))))))))
+              (apply lifted-f (map get-value inputs))))))))
 
 (defn compound-propagator
   "Constructs a propagtor which will observe the neighbours cells and
@@ -120,7 +120,7 @@
   [neighbours to-build]
   (let [done? (ref false)
         test (fn [] (when-not @done?
-                     (when-not (some nothing? (map get-content neighbours))
+                     (when-not (some nothing? (map get-value neighbours))
                        (ref-set done? true)
                        (to-build))))]
     (propagator neighbours test)))

@@ -47,8 +47,8 @@
       x-squared (make-cell)]
   (binding [*merge* my-merge]
     (quadratic x x-squared)
-    (add-content x 10.0)
-    (get-content x-squared)))
+    (add-value x 10.0)
+    (get-value x-squared)))
 ;; => 100.0
 
 ;; or the square-root, depending on the input from the user
@@ -56,8 +56,8 @@
       y-squared (make-cell)]
   (binding [*merge* my-merge]
     (quadratic y y-squared)
-    (add-content y-squared 1764.0)
-    (get-content y)))
+    (add-value y-squared 1764.0)
+    (get-value y)))
 ;; => 42.0
 
 ;; we will be warned of any inconsistencies in our system when adding
@@ -66,6 +66,6 @@
       z-squared (make-cell)]
   (binding [*merge* my-merge]
     (quadratic z z-squared)
-    (add-content z 10.0)
-    (add-content z-squared 123.0)))
+    (add-value z 10.0)
+    (add-value z-squared 123.0)))
 ;; Exception: Inconsistency: 100.0 != 123.0
