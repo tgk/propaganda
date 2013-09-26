@@ -27,8 +27,6 @@
   (squarer x x-squared)
   (sqrter x-squared x))
 
-;;
-
 (doseq [generic-op [intervals/generic-mul intervals/generic-div]]
   ;; tms support
   (go/assign-operation generic-op
@@ -55,8 +53,8 @@
 ;; Extend supplied merge
 
 (defn extend-merge
-  "Extends the supplied generic operator with interval mergings. These
-  also include merging numbers with intervals."
+  "Extends the merge operator with support for interval under the STM
+  version of propagators."
   [generic-merge-operator]
   (doto generic-merge-operator
     (intervals/extend-merge)

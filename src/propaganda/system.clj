@@ -5,6 +5,16 @@
     [values propagators merge contradictory? alert-queue freezing?])
 
 (defprotocol PropagatorSystemProtocol
+  "A propagator system that contains a set of cells with values. Any
+  clojure value can be used as a cell identifier. Cells do not need to
+  be initialised. Their value defaults to
+  propaganda.values/nothing. When a value is added to the system,
+  propagators are alerted, bringing the system to an unstabile
+  state.
+
+  The system is cooled down until it reaches a stabile state again. If
+  the :audit? key is true in the metadata of the system, each unstabile
+  system is stored under the :prev key of the systems."
   (add-value             [this cell value])
   (get-value             [this cell])
   (add-propagator        [this cells f])
@@ -13,6 +23,7 @@
   (alert-all-propagators [this]))
 
 (defn- update-keys
+  "Applies f to the values of m under ks."
   [m ks f & args]
   (reduce (fn [m k] (assoc m k (apply f (get m k) args)))
           m
@@ -42,11 +53,11 @@
       (with-meta new-system {:audit? true :prev system})
       new-system)))
 
-;; freezing? is used to avoid deep recursion. Discuss if there are any
-;; states, e.g. on exception, that might ruin this approach
 (defn- freeze
+  "Freezes the system down until it reaches a stabile state. If the
+  system is already in the process of being cooled down, nothing is done
+  to the system."
   [system]
-  ;; only freeze the system if some other loop isn't marked as freezing the system
   (if (:freezing? system)
     system
     (assoc
@@ -57,6 +68,7 @@
       :freezing? false)))
 
 (defn- all-propagators
+  "Returns all propagators of the system."
   [system]
   (set (mapcat second (:propagators system))))
 
@@ -93,17 +105,16 @@
         (update-in [:alert-queue] concat (all-propagators this))
         freeze)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (defn make-system
+  "Creates a new system. If no merge and contradictory? is given, the
+  default versions from the values namespace are used. To merge values,
+  e.g. interval, supply a custom merge."
   ([]
      (make-system (values/default-merge)
                   (values/default-contradictory?)))
   ([merge contradictory?]
      (PropagatorSystem.
       {} {} merge contradictory? [] false)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn lift-to-cell-contents
   "Returns a safe-guarded version of f which ensures that all arguments
@@ -116,7 +127,9 @@
 
 (defn function->propagator-constructor
   "Returns a propagtor constructor which will lift the content of f
-  applied to the first cells to the last cell."
+  applied to the first cells to the last cell. The propagator
+  constructor returned accepts a system and the cells. An altered system
+  is returned."
   [f]
   (fn [system & cells]
     (let [inputs (butlast cells)
@@ -132,5 +145,7 @@
           (apply lifted-f (map (partial get-value system) inputs))))))))
 
 (defn constant
+  "Returns a propagator constructor taking system and a cell, ensuring
+  it always has the value value. Returns a new system."
   [value]
   (function->propagator-constructor (fn [] value)))

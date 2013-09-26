@@ -128,5 +128,7 @@
 ;; Useful propagators
 
 (defn constant
+  "Returns a propagator constructor taking cell and ensuring it always
+  has the value value."
   [value]
   (function->propagator-constructor (fn [] value)))

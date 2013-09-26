@@ -9,6 +9,7 @@
     [lo hi])
 
 (defn make-interval
+  "Returns a new closed interval from lo to hi."
   [lo hi]
   (Interval. lo hi))
 
@@ -33,20 +34,25 @@
                  (Math/sqrt (double (:hi x)))))
 
 (defn empty-interval?
+  "Determines if the interval is empty."
   [x]
   (> (:lo x) (:hi x)))
 
 (defn intersect-intervals
+  "Creates an intersection of the intervals."
   [x y]
   (make-interval
    (max (:lo x) (:lo y))
    (min (:hi x) (:hi y))))
 
 (defn interval?
+  "Returns true iff x is an interval."
   [x]
   (isa? (type x) Interval))
 
 (defn ensure-inside
+  "If number is in interval, the number is returned. If not, a
+  descriptive contradiction is returned."
   [interval number]
   (if (<= (:lo interval) number (:hi interval))
     number
@@ -56,6 +62,8 @@
 ;; Generic standard arithmetic operations
 
 (defn ->interval
+  "Ensures x is an interval. If x is already an interval, x is
+  returned. If x is not, an interval from x to x is returned."
   [x]
   (if (interval? x)
     x
@@ -93,21 +101,12 @@
 
 ;; Supported values
 
-(defn boolean?
-  [thing]
-  (or (= thing false) (= thing true)))
-
 (defn flat?
-  "Determines if thing is flat, i.e. an interval, a number or a
-  boolean."
+  "Determines if thing is flat, i.e. an interval or a number."
   [thing]
   (or (interval? thing)
-      (number? thing)
-      ;; TODO: We don't support booleans in the interval namespace yet
-      #_(boolean? thing)))
+      (number? thing)))
 
-;; TODO: Remember to extend this list when more operations are
-;; implemented
 (doseq [generic-op [generic-mul generic-div]]
   ;; supported values support
   (go/assign-operation generic-op

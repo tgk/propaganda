@@ -26,4 +26,7 @@
       (squarer x x-squared)
       (sqrter x-squared x)))
 
-(def extend-merge intervals/extend-merge)
+(def extend-merge
+  "Extends the merge operator with support for interval under the system
+  version of propagators."
+  intervals/extend-merge)
