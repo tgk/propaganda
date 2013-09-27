@@ -10,7 +10,7 @@ There is a Clojars release containing an implementation that works in both Cloju
 
 The leiningen dependency is
 
-    [propaganda "0.1.2"]
+    [propaganda "0.2.0"]
 
 ## Tutorial
 
