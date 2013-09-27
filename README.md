@@ -18,7 +18,7 @@ Here follows a short tutorial. For more in depth information, please consult the
 
 - The `gh-pages` branch of this project contains a brief explanation of the basics of the propagator computational model. The page can be visited [here](http://tgk.github.io/propaganda/).
 
-- [STM vs. System propagation](https://github.com/tgk/propaganda/blob/master/doc/stm_vs_system.md) contains illustrates the differences between the STM and system approach to propagation using the building height problem.
+- [STM vs. System propagation](https://github.com/tgk/propaganda/blob/master/doc/stm_vs_system.md) illustrates the differences between the STM and system approach to propagation using the building height problem.
 
 - [Extending propaganda with set values](https://github.com/tgk/propaganda/blob/master/doc/set_datatype.md) shows how to extend propaganda with support for sets.
 
