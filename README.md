@@ -27,7 +27,7 @@ Here follows a short tutorial. For more in depth information, please consult the
 
 To use the propaganda library, you need to define a merge, function, create cells and set up propagators. In this short example we just use the default merger function, we define the square and square-root propagator and set up relations beween simple cells.
 
-```
+```clojure
 (use 'propaganda.stm)
 (use 'propaganda.values)
 ```
@@ -35,19 +35,19 @@ To use the propaganda library, you need to define a merge, function, create cell
 `default-merge` will give us a merger that will merge
 nothing with anything, but will enforce that anything else
 that is attempted to be merged will return a contradiction
-```
+```clojure
 (def my-merge
   (default-merge))
 ```
 
 `nothing` can be merged with `nothing` and will return `nothing`
-```
+```clojure
 (my-merge nothing nothing)
 ;; => :propaganda.values/nothing
 ```
 
 Anything else will be the result of the merge
-```
+```clojure
 (my-merge nothing 1)
 ;; => 1
 (my-merge 2 nothing)
@@ -57,14 +57,14 @@ Anything else will be the result of the merge
 ```
 
 ... unless it gives rise to a contradiction
-```
+```clojure
 (my-merge 1 2)
 ;; => #propaganda.core.Contradiction{:reason "1 != 2"}
 ```
 
-The `function->propagator-constructore` can be used for setting up
+The `function->propagator-constructor` can be used for setting up
 simple one way relations
-```
+```clojure
 (def squarer
   (function->propagator-constructor
    (fn [val] (* val val))))
@@ -75,7 +75,7 @@ simple one way relations
 ```
 
 ... which can be extended to go both ways
-```
+```clojure
 (defn quadratic
   [x x-squared]
   (squarer x x-squared)
@@ -84,7 +84,7 @@ simple one way relations
 
 We can not construct cells and set up the quadratic relations to read
 the squared of a number in our system:
-```
+```clojure
 (let [x (make-cell)
       x-squared (make-cell)]
   (binding [*merge* my-merge]
@@ -95,7 +95,7 @@ the squared of a number in our system:
 ```
 
 Or the square-root, depending on the input from the user
-```
+```clojure
 (let [y (make-cell)
       y-squared (make-cell)]
   (binding [*merge* my-merge]
@@ -107,7 +107,7 @@ Or the square-root, depending on the input from the user
 
 We will be warned of any inconsistencies in our system when adding
 content
-```
+```clojure
 (let [z (make-cell)
       z-squared (make-cell)]
   (binding [*merge* my-merge]

@@ -6,7 +6,7 @@ In this example, the semantics of a set value is as follows: a cell contains som
 
 First, we need to get the basic dependencies
 
-```
+```clojure
 (ns user
   (:require [propaganda.system :as system]
             [propaganda.values :as values]
@@ -16,7 +16,7 @@ First, we need to get the basic dependencies
 
 Next, we create two helper functions: one for creating intersections (or contradictions), and one for checking values are in sets (or raise contradictions).
 
-```
+```clojure
 (defn check-intersection
   [s1 s2]
   (let [i (intersection s1 s2)]
@@ -37,7 +37,7 @@ Next, we create two helper functions: one for creating intersections (or contrad
 
 With `check-intersection` and `check-in-set`, we are ready to write a function for extending a `merge` operator, using generic operators.
 
-```
+```clojure
 (defn extend-merge
   [merge]
   (doto merge
@@ -56,7 +56,7 @@ With `check-intersection` and `check-in-set`, we are ready to write a function f
 
 We introduce a helper function to extract cell values from a system and take our implementation for a spin:
 
-```
+```clojure
 (defn keyword-values
   [system]
   (let [ks (->> system :values keys (filter keyword?))]
@@ -87,7 +87,7 @@ We introduce a helper function to extract cell values from a system and take our
 
 The result of the three first expressions in the vector are cells with reasonable values. The last expression gives rise to a contradiction, which we capture and present.
 
-```
+```clojure
 [{:cell #{:foo :bar}}
  {:cell :foo}
  {:cell :bar}
@@ -96,7 +96,7 @@ The result of the three first expressions in the vector are cells with reasonabl
 
 That's all that is needed for basic set support. To help you set up relations between sets, here is a basic union relation. Creating other relations can be done in a similar manner.
 
-```
+```clojure
 (defn union-relation
   [system s1 s2 result]
   (-> system

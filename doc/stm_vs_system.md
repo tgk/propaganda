@@ -22,7 +22,7 @@ The two first approaches will have a lot of error associated with them, represen
 
 First, we need the basic dependencies for having interval values and STM propagation.
 
-```
+```clojure
 (use 'propaganda.stm)
 (use 'propaganda.values)
 (use '[propaganda.intervals.common :exclude [extend-merge]])
@@ -31,7 +31,7 @@ First, we need the basic dependencies for having interval values and STM propaga
 
 We create a helper function for setting up a fall duration relation between cells. `(fall-duration t h` will create the relationship between time `t` in seconds and heigth `h` subject to some uncertainty on the gravitational force.
 
-```
+```clojure
 (defn fall-duration
   [t h]
   (compound-propagator
@@ -50,7 +50,7 @@ We create a helper function for setting up a fall duration relation between cell
 
 We also introduce a helper for the shadow relations, called `similar-triangles`. `(similar-triangles s-ba h-ba s h)` create the relation described in the previous section between the shadow and height of the barometer, and the shadow and height of the building.
 
-```
+```clojure
 (defn similar-triangles
   [s-ba h-ba s h]
   (compound-propagator
@@ -63,7 +63,7 @@ We also introduce a helper for the shadow relations, called `similar-triangles`.
 
 We can now create a merge function that takes intervals into account, set up our cells and add the relations between them.
 
-```
+```clojure
 (let [custom-merge (doto (default-merge) extend-merge)]
    (binding [*merge* custom-merge]
      (let [building-height (make-cell)
@@ -94,7 +94,7 @@ We can now create a merge function that takes intervals into account, set up our
 
 As you can see, most of our input are values, as there will be some uncertainty on our observations (we are measuring the real world, after all). The output of the expression is given below. Notice how the intervals get refined on our input values. For example, we now have a much better estimate on the fal time than we had before (from [29, 3.1] to [3.026, 3.032]).
 
-```
+```clojure
 [45
  {:lo 54.9, :hi 55.1}
  {:lo 0.3, :hi 0.30327868852459017}
@@ -115,7 +115,7 @@ The system approach solves all of these problems.
 
 To switch to the system approach, we need the `system` namespaces where we used `stm` before.
 
-```
+```clojure
 (use 'propaganda.system)
 (use 'propaganda.values)
 (use '[propaganda.intervals.common :exclude [extend-merge]])
@@ -124,7 +124,7 @@ To switch to the system approach, we need the `system` namespaces where we used 
 
 The functions setting up our relations now have to take the system as a parameter and return an altered system, as opposed to registering global propagators.
 
-```
+```clojure
 (defn fall-duration
   [system t h]
   (let [g          (gensym)
@@ -148,7 +148,7 @@ The functions setting up our relations now have to take the system as a paramete
 
 Likewise, when setting up the system, each function returns a new altered system that we need to thread through to the next function. We no longer need to bind any global variables - we simply pass our merge function to `make-system` when creating a blank system.
 
-```
+```clojure
 (let [custom-merge (doto (default-merge) extend-merge)
       system (make-system custom-merge (default-contradictory?))
       result-system (-> system
@@ -173,7 +173,7 @@ Likewise, when setting up the system, each function returns a new altered system
 
 The result is the same as before.
 
-```
+```clojure
 [45
  {:lo 54.9, :hi 55.1}
  {:lo 0.3, :hi 0.30327868852459017}
