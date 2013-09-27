@@ -92,7 +92,7 @@ We can now create a merge function that takes intervals into account, set up our
         (get-value fall-time)])))
 ```
 
-As you can see, most of our input are values, as there will be some uncertainty on our observations (we are measuring the real world, after all). The output of the expression is given below. Notice how the intervals get refined on our input values. For example, we now have a much better estimate on the fal time than we had before (from [29, 3.1] to [3.026, 3.032]).
+As you can see, most of our input are values, as there will be some uncertainty on our observations (we are measuring the real world, after all). The output of the expression is given below. Notice how the intervals get refined on our input values. For example, we now have a much better estimate on the fal time than we had before (from [2.9, 3.1] to [3.026, 3.032]).
 
 ```clojure
 [45
