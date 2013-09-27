@@ -82,7 +82,7 @@ simple one way relations
   (sqrter  x-squared x))
 ```
 
-We can not construct cells and set up the quadratic relations to read
+We can now construct cells and set up the quadratic relations to read
 the squared of a number in our system:
 ```clojure
 (let [x (make-cell)

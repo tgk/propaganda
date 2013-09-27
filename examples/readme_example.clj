@@ -41,7 +41,7 @@
   (sqrter  x-squared x))
 
 
-;; we can not construct cells and set up the quadratic relations to read
+;; we can now construct cells and set up the quadratic relations to read
 ;; the squared of a number in our system:
 (let [x (make-cell)
       x-squared (make-cell)]
