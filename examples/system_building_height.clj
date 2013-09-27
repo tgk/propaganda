@@ -6,8 +6,6 @@
 (use 'propaganda.intervals.system)
 
 (defn fall-duration
-  "Creates propagator from fall duration t to building height h with
-  some uncertainty on the gravitational acceleration."
   [system t h]
   (let [g          (gensym)
         one-half   (gensym)

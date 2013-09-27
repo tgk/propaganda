@@ -6,8 +6,6 @@
 (use 'propaganda.intervals.stm)
 
 (defn fall-duration
-  "Creates propagator from fall duration t to building height h with
-  some uncertainty on the gravitational acceleration."
   [t h]
   (compound-propagator
    [t]
