@@ -105,4 +105,4 @@ That's all that is needed for basic set support. To help you set up relations be
      ((system/function->propagator-constructor difference) result s2 s1)))
 ```
 
-HAve fun exploring sets!
+Have fun exploring sets!
