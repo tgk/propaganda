@@ -21,7 +21,7 @@
 
 ;; ... unless it gives rise to a contradiction
 (my-merge 1 2)
-;; => #propaganda.core.Controdiction{:reason "1 != 2"}
+;; => #propaganda.core.Contradiction{:reason "1 != 2"}
 
 
 ;; the function->propagator-constructore can be used for setting up

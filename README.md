@@ -51,7 +51,7 @@ Anything else will be the result of the merge
 ... unless it gives rise to a contradiction
 ```
 (my-merge 1 2)
-;; => #propaganda.core.Controdiction{:reason "1 != 2"}
+;; => #propaganda.core.Contradiction{:reason "1 != 2"}
 ```
 
 The `function->propagator-constructore` can be used for setting up
