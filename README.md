@@ -14,10 +14,18 @@ The leiningen dependency is
 
 ## Tutorial
 
-The `gh-pages` branch of this project contains a brief explanation of the basics of the propagator computational model. The page can be visited [here](http://tgk.github.io/propaganda/). [The Art of the Propagator](http://dspace.mit.edu/handle/1721.1/44215) contains a more in-depth explanation of how propagation can be implemented.
+Here follows a short tutorial. For more in depth information, please consult the following sources:
 
-To use the propaganda library, you need to define a merge, function, create cells and set up propagators. In this short example we just use the default merger function, we define the square and square-root propagator and set up relations beween simple cells. An example where values are intervals and merging is performed by taking the intersection of intervals can be found in [`examples/building_height.clj`](https://github.com/tgk/propaganda/blob/master/examples/building_height.clj).
+- The `gh-pages` branch of this project contains a brief explanation of the basics of the propagator computational model. The page can be visited [here](http://tgk.github.io/propaganda/).
 
+- [STM vs. System propagation](https://github.com/tgk/propaganda/blob/master/doc/stm_vs_system.md) contains illustrates the differences between the STM and system approach to propagation using the building height problem.
+
+- [Extending propaganda with set values](https://github.com/tgk/propaganda/blob/master/doc/set_datatype.md) shows how to extend propaganda with support for sets.
+
+- [The Art of the Propagator](http://dspace.mit.edu/handle/1721.1/44215) contains a more in-depth explanation of how propagation can be implemented.
+
+
+To use the propaganda library, you need to define a merge, function, create cells and set up propagators. In this short example we just use the default merger function, we define the square and square-root propagator and set up relations beween simple cells.
 
 ```
 (use 'propaganda.stm)
