@@ -2,9 +2,9 @@
 
 The original [The Art of the Propagator](http://dspace.mit.edu/handle/1721.1/44215) paper uses an approach in which cells are created and maintained in the runtime of the environment hosting the implementation. This approach lends itself very nicely to Clojure's STM, as coordination between cells and propagators must happen in a synchronised manner. The implementation in the `propaganda.stm` namespace follows this approach.
 
-The approach does not directly translate to runtimes in which there are weaker synchronisation mechanisms, such as the javascript runtime. The propaganda library therefore contains a novel approach in which all values of a system is kept in an immutable datastructure, called the *system*. When values are added to cells, a new system is returned with the value added, or a contradiction is raised if the value contradicts facts already in the system.
+The approach does not directly translate to runtimes in which there are weaker synchronisation mechanisms, such as the javascript runtime. The propaganda library therefore contains a novel approach in which all values of a system is kept in an immutable datastructure, called the *system*. When values are added to cells, a new system is returned with the value added, or a contradiction is raised if the value contradicts facts already in the system. The implementation in the `propaganda.system` namespace follows this approach.
 
-This document outlines how the two different approaches can be used to solve the building height problem (also known as [the barometer question](http://en.wikipedia.org/wiki/Barometer_question).
+This document outlines how the two different approaches can be used to solve the building height problem (also known as [the barometer question](http://en.wikipedia.org/wiki/Barometer_question)).
 
 ## The building height problem
 
@@ -29,7 +29,7 @@ First, we need the basic dependencies for having interval values and STM propaga
 (use 'propaganda.intervals.stm)
 ```
 
-We create a helper function for setting up a fall duration relation between cells. `(fall-duration t h` will create the relationship between time `t` in seconds and heigth `h` subject to some uncertainty on the gravitational force.
+We create a helper function for setting up a fall duration relation between cells. `(fall-duration t h)` will create the relationship between time `t` in seconds and heigth `h` subject to some uncertainty on the gravitational force.
 
 ```clojure
 (defn fall-duration
@@ -92,7 +92,7 @@ We can now create a merge function that takes intervals into account, set up our
         (get-value fall-time)])))
 ```
 
-As you can see, most of our input are values, as there will be some uncertainty on our observations (we are measuring the real world, after all). The output of the expression is given below. Notice how the intervals get refined on our input values. For example, we now have a much better estimate on the fal time than we had before (from [2.9, 3.1] to [3.026, 3.032]).
+As you can see, most of our input are intervals, as there will be some uncertainty on our observations (we are measuring the real world, after all). The output of the expression is given below. Notice how the intervals get refined on our input values. For example, we now have a much better estimate on the fal time than we had before (from [2.9, 3.1] to [3.026, 3.032]).
 
 ```clojure
 [45
@@ -188,4 +188,4 @@ To re-iterate, the system approach requires us to feed the system to each call a
 - No propagators are put in global vars, they are kept in the system.
 - We can take a system at any time, perform experiments on it and choose to use it, or to revert back to our old copy (or copies) of the system.
 
-Please try altering facts and relations in the system. It helps in understanding which relations and values influence what in the system.
+Have a go at altering facts and relations in the system. It helps in understanding which relations and values influence what in the system.
