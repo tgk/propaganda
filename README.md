@@ -25,7 +25,9 @@ Here follows a short tutorial. For more in depth information, please consult the
 - [The Art of the Propagator](http://dspace.mit.edu/handle/1721.1/44215) contains a more in-depth explanation of how propagation can be implemented.
 
 
-To use the propaganda library, you need to define a merge, function, create cells and set up propagators. In this short example we just use the default merger function, we define the square and square-root propagator and set up relations beween simple cells.
+To use the propaganda library, you need to define a merge, function, create cells and set up propagators. The merge function is invoked when a propagator attempts to store a new value in a cell. The merge function is invoked with the current value and the new value, and must return either a new value which will be stored in the cell, or a `Conflict` object.
+
+In this short example we just use the default merger function, we define the square and square-root propagator and set up relations beween simple cells.
 
 ```clojure
 (use 'propaganda.stm)
