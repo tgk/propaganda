@@ -1,8 +1,10 @@
 (ns propaganda.intervals-test
   (:use clojure.test)
-  (:require [propaganda.core :as p]
-            [propaganda.intervals :as i]
-            [propaganda.support-values :as sv]))
+  (:require [propaganda.stm :as p]
+            [propaganda.intervals.common :as i]
+            [propaganda.intervals.stm :as ii]
+            [propaganda.support-values :as sv]
+            [propaganda.values :as v]))
 
 ;; building height example
 
@@ -19,9 +21,9 @@
            gt-squared (p/make-cell)]
        ((p/constant (i/make-interval 9.789 9.832)) g)
        ((p/constant 0.5) one-half)
-       (i/quadratic t t-squared)
-       (i/product g t-squared gt-squared)
-       (i/product one-half gt-squared h)))))
+       (ii/quadratic t t-squared)
+       (ii/product g t-squared gt-squared)
+       (ii/product one-half gt-squared h)))))
 
 (defn similar-triangles
   [s-ba h-ba s h]
@@ -29,11 +31,11 @@
    [s-ba h-ba s]
    (fn []
      (let [ratio (p/make-cell)]
-       (i/product s-ba ratio h-ba)
-       (i/product s ratio h)))))
+       (ii/product s-ba ratio h-ba)
+       (ii/product s ratio h)))))
 
 (deftest building-height-test
-  (let [custom-merge (doto (p/default-merge) i/extend-merge)]
+  (let [custom-merge (doto (v/default-merge) ii/extend-merge)]
     (binding [p/*merge* custom-merge]
      (let [building-height  (p/make-cell)
            fall-time        (p/make-cell)
@@ -65,10 +67,10 @@
 ;; building height with supported-values example
 
 (deftest building-height-with-supported-values-test
-  (let [custom-merge (doto (p/default-merge)
-                       i/extend-merge
+  (let [custom-merge (doto (v/default-merge)
+                       ii/extend-merge
                        sv/extend-merge)
-        custom-contradictory? (doto (p/default-contradictory?)
+        custom-contradictory? (doto (v/default-contradictory?)
                                 sv/extend-contradictory?)]
     (binding [p/*merge* custom-merge]
      (let [building-height  (p/make-cell)
