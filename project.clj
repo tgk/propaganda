@@ -14,13 +14,13 @@
   :clojurescript? true
   :cljsbuild
   {:builds {:main
-            {:source-paths ["src-cljs"]
+            {:source-paths ["crossover"]
              :jar true
              :compiler {:output-to "js/propaganda.js"
                         :optimizations :advanced
                         :pretty-print false}}
             :dev
-            {:source-paths ["src-cljs"]
+            {:source-paths ["crossover"]
              :compiler {:optimizations :whitespace
                         :pretty-print true}}}
    :crossovers [propaganda.values
