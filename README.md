@@ -18,6 +18,8 @@ Here follows a short tutorial. For more in depth information, please consult the
 
 - The 2013 Clojure/conj talk [Propagators in Clojure](http://www.youtube.com/watch?v=JXOOO9MLvhs), which gives a broad overview of what propagators are, and how they are implemented in this library.
 
+- The 2014 London Clojurians meetup talk "Propaganda! A declarative programming model in Clojure" is available [here as a SkillsCast](https://skillsmatter.com/skillscasts/5103-propaganda-a-declarative-programming-model-in-clojure). The examples and the slides are [available here at github](https://github.com/tgk/propaganda-a-declarative-programming-model-in-clojure).
+
 - [Getting hot with propagators](http://tgk.github.io/2014/01/getting-hot-with-propagators.html) and [Taking propagators to the next level](http://tgk.github.io/2014/01/taking-propagators-to-the-next-level.html) - two tutorials that dive a bit deeper in explaining how the propaganda library works.
 
 - The `gh-pages` branch of this project contains a brief explanation of the basics of the propagator computational model. The page can be visited [here](http://tgk.github.io/propaganda/).
